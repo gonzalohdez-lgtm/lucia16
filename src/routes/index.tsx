@@ -1,24 +1,84 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useCallback, useEffect, useState } from "react";
+import { days, dayIcons } from "@/lib/days";
+import { isDayOpen } from "@/lib/secret";
+import { DayContent } from "@/components/DayContent";
+import { RiverScene } from "@/components/RiverScene";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Calendario de adviento para Lucía 🩵" },
+      { name: "description", content: "Una casilla cada día hasta el 21 de diciembre, el cumpleaños de Lucía." },
+      { property: "og:title", content: "Calendario de adviento para Lucía 🩵" },
+      { property: "og:description", content: "Una casilla cada día hasta el 21 de diciembre." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Advent,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Advent() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [river, setRiver] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [now, setNow] = useState<Date | null>(null);
+  const [locked, setLocked] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(new Date());
+    setPreview(new URLSearchParams(window.location.search).has("probar"));
+  }, []);
+
+  const closeRiver = useCallback(() => setRiver(false), []);
+  const open = (i: number) => (preview || (now && isDayOpen(i + 1, now))) ? setSelected(i) : setLocked(i);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="min-h-screen bg-background px-5 py-14 text-foreground">
+      <div className="mx-auto max-w-4xl">
+        <p className="eyebrow text-muted-foreground">21 · 12 · 2026</p>
+        <h1 className="mt-3 font-serif text-4xl md:text-6xl">Tienes que entrar aquí 1 vez al día hasta el día 21 de diciembre</h1>
+        <p className="mt-4 text-muted-foreground">Para Lucía. Cada día se abre una casilla nueva 🩵</p>
+
+        <div className="mt-10 grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-7">
+          {days.map((d, i) => {
+            const available = preview || (now ? isDayOpen(i + 1, now) : false);
+            return (
+              <button key={i} onClick={() => open(i)}
+                className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl border border-border font-serif text-3xl shadow-sm transition hover:-translate-y-1 ${i === 20 ? "bg-accent" : "bg-card"} ${available ? "hover:bg-secondary" : "opacity-60"}`}>
+                {i + 1}
+                <span className="text-base">{available ? dayIcons[d.type] : "🔒"}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {locked !== null && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4" onClick={() => setLocked(null)}>
+          <div className="w-full max-w-sm rounded-3xl bg-card p-6 text-center shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <p className="text-5xl">🔒</p>
+            <p className="mt-4 text-lg">Esta casilla se abre el {locked + 1} de diciembre.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Un poquito de paciencia 🩵</p>
+            <button onClick={() => setLocked(null)} className="pill-button mt-6 border border-border">Vale</button>
+          </div>
+        </div>
+      )}
+
+      {selected !== null && (
+        <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-foreground/40 p-4" onClick={() => setSelected(null)}>
+          <div className="my-6 w-full max-w-md rounded-3xl bg-card p-6 shadow-xl md:p-8" onClick={(e) => e.stopPropagation()}>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Día {selected + 1}</p>
+            <div className="mt-3">
+              <DayContent key={selected} day={days[selected]} onLastSurprise={() => { setSelected(null); setRiver(true); }} />
+            </div>
+            <button onClick={() => setSelected(null)} className="pill-button mt-6 border border-border">Cerrar</button>
+          </div>
+        </div>
+      )}
+
+      <RiverScene open={river} onClose={closeRiver} />
+    </main>
   );
 }
