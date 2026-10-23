@@ -71,7 +71,7 @@ function Advent() {
           <div className="my-6 w-full max-w-md rounded-3xl bg-card p-6 shadow-xl md:p-8" onClick={(e) => e.stopPropagation()}>
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Día {selected + 1}</p>
             <div className="mt-3">
-              <DayContent key={selected} day={days[selected]} onLastSurprise={() => { setSelected(null); setRiver(true); }} />
+              <DayContent key={selected} day={days[selected]!} onLastSurprise={() => { setSelected(null); setRiver(true); }} />
             </div>
             <button onClick={() => setSelected(null)} className="pill-button mt-6 border border-border">Cerrar</button>
           </div>
