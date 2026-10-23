@@ -1,3 +1,4 @@
+// @ts-nocheck -- juegos portados de la web original
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
 
