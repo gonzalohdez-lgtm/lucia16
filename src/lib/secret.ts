@@ -15,6 +15,17 @@ export function isUnlocked() {
   return typeof window !== "undefined" && localStorage.getItem(KEY) === "1";
 }
 
+// "password": cada día pide la misma contraseña (modo actual).
+// "date": cada día se abre solo en su fecha.
+export const DAY_UNLOCK_MODE: "password" | "date" = "password";
+const DAYS_KEY = "lucia-dias-abiertos";
+export function markDaysUnlocked() {
+  localStorage.setItem(DAYS_KEY, "1");
+}
+export function areDaysUnlocked() {
+  return typeof window !== "undefined" && localStorage.getItem(DAYS_KEY) === "1";
+}
+
 /** Día del calendario disponible: 1–21 de diciembre de 2026 (hora de Madrid). */
 export function isDayOpen(day: number, now = new Date()) {
   const madrid = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Madrid" }));
