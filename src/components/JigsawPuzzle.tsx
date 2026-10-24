@@ -8,10 +8,10 @@ function shuffled(): number[] {
   const a = Array.from({ length: N }, (_, i) => i);
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [a[i], a[j]] = [a[j]!, a[i]!];
   }
   // Evita que salga ya resuelto
-  if (a.every((v, i) => v === i)) [a[0], a[1]] = [a[1], a[0]];
+  if (a.every((v, i) => v === i)) [a[0], a[1]] = [a[1]!, a[0]!];
   return a;
 }
 
