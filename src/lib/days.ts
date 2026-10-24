@@ -5,6 +5,7 @@ export type Day =
   | { type: "memory"; title: string; emojis: string[]; reward: string }
   | { type: "gift"; title: string; inside: string }
   | { type: "racing"; title: string; url: string }
+  | { type: "puzzle"; title: string; image: string; reward: string }
   | { type: "riddle"; title: string; riddle: string; answer: string; reward: string }
   | { type: "reasons"; title: string; reasons: string[] }
   | { type: "coupon"; title: string; coupon: string; detail: string }
