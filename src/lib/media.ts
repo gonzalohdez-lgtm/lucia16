@@ -15,6 +15,7 @@ import p16 from "@/assets/16.jpeg.asset.json";
 import p17 from "@/assets/17.jpeg.asset.json";
 import p18 from "@/assets/18.jpeg.asset.json";
 import river from "@/assets/guadalquivir.jpg.asset.json";
+import puzzleDay2 from "@/assets/puzle-dia2.jpeg.asset.json";
 import song from "@/assets/lugar-seguro.mp3.asset.json";
 
 export const photos = {
@@ -24,4 +25,5 @@ export const photos = {
 };
 export const allPhotos = Object.values(photos);
 export const riverImage = river.url;
+export const puzzleDay2Image = puzzleDay2.url;
 export const riverSong = song.url;
