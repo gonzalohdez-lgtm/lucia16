@@ -4,6 +4,7 @@ export type Day =
   | { type: "scratch"; title: string; prize: string }
   | { type: "memory"; title: string; emojis: string[]; reward: string }
   | { type: "gift"; title: string; inside: string }
+  | { type: "racing"; title: string; url: string }
   | { type: "riddle"; title: string; riddle: string; answer: string; reward: string }
   | { type: "reasons"; title: string; reasons: string[] }
   | { type: "coupon"; title: string; coupon: string; detail: string }
@@ -11,7 +12,7 @@ export type Day =
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -22,7 +23,7 @@ export const days: Day[] = [
     { q: "¿Cuál es mi lugar favorito?", options: ["La playa", "Contigo", "Mi cama"], answer: 1 },
     { q: "¿Quién se ríe más de las tonterías?", options: ["Tú", "Yo", "Los dos"], answer: 2 },
   ], reward: "¡Perfecta! Me conoces mejor que nadie 🩵" },
-  { type: "gift", title: "Un regalito", inside: "Un beso guardado para cuando nos veamos 💋" },
+  { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
   { type: "memory", title: "Parejas", emojis: ["🩵", "🌸", "🌙", "✨"], reward: "¡Lo has conseguido! 🌸" },
   { type: "coupon", title: "Un cupón", coupon: "Vale por un plan sorpresa", detail: "Tú eliges el día, yo me encargo del resto." },
   { type: "riddle", title: "Adivinanza", riddle: "Pasa por Sevilla y nos ha visto pasear de noche. ¿Qué es?", answer: "guadalquivir", reward: "¡Eso es! Nuestro río 🌙" },

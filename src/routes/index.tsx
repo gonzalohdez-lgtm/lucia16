@@ -4,6 +4,8 @@ import { days, dayIcons } from "@/lib/days";
 import { isDayOpen, DAY_UNLOCK_MODE, areDaysUnlocked, markDaysUnlocked, checkPassword } from "@/lib/secret";
 import { DayContent } from "@/components/DayContent";
 import { RiverScene } from "@/components/RiverScene";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,12 +98,22 @@ function Advent() {
         </div>
       )}
 
-      {selected !== null && (
+      {selected !== null && days[selected]?.type === "racing" && (
+        <section role="dialog" aria-modal="true" aria-label="Día 4: Lucía ♥ Gonzalo Racing" className="fixed inset-0 z-50 flex flex-col bg-background">
+          <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 py-2">
+            <p className="text-sm font-medium">Día 4 · 🏎️ Lucía ♥ Gonzalo</p>
+            <Button variant="outline" size="icon" aria-label="Cerrar juego" title="Cerrar juego" onClick={() => setSelected(null)}><X /></Button>
+          </header>
+          <iframe src={days[selected].type === "racing" ? days[selected].url : undefined} title="Lucía ♥ Gonzalo Racing" allow="autoplay; fullscreen; gamepad" allowFullScreen className="min-h-0 w-full flex-1 border-0" />
+        </section>
+      )}
+
+      {selected !== null && days[selected]?.type !== "racing" && (
         <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-foreground/40 p-4" onClick={() => setSelected(null)}>
           <div className="my-6 w-full max-w-md rounded-3xl bg-card p-6 shadow-xl md:p-8" onClick={(e) => e.stopPropagation()}>
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Día {selected + 1}</p>
             <div className="mt-3">
-              <DayContent key={selected} day={days[selected]!} onLastSurprise={() => { setSelected(null); setRiver(true); }} />
+              {days[selected] && <DayContent key={selected} day={days[selected]} onLastSurprise={() => { setSelected(null); setRiver(true); }} />}
             </div>
             <button onClick={() => setSelected(null)} className="pill-button mt-6 border border-border">Cerrar</button>
           </div>
