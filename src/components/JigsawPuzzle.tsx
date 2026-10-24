@@ -27,7 +27,7 @@ export function JigsawPuzzle({ image, reward }: { image: string; reward: string 
     if (picked === slot) { setPicked(null); return; }
     setOrder((o) => {
       const n = [...o];
-      [n[picked], n[slot]] = [n[slot], n[picked]];
+      [n[picked], n[slot]] = [n[slot]!, n[picked]!];
       return n;
     });
     setMoves((m) => m + 1);
