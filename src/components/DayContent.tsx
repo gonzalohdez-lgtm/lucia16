@@ -1,6 +1,7 @@
 // @ts-nocheck -- juegos portados de la web original
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
+import { JigsawPuzzle } from "@/components/JigsawPuzzle";
 
 const btn = "pill-button pill-dark";
 const option = "w-full rounded-2xl border border-border bg-background px-4 py-3 text-left transition hover:bg-secondary";
@@ -24,6 +25,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "quiz": return <Quiz day={day} />;
     case "scratch": return <Scratch prize={day.prize} />;
     case "memory": return <Memory emojis={day.emojis} reward={day.reward} />;
+    case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
     case "riddle": return <Riddle day={day} />;
     case "reasons": return <Reasons reasons={day.reasons} />;
