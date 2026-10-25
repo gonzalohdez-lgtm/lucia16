@@ -36,36 +36,47 @@ export function JigsawPuzzle({ image, reward }: { image: string; reward: string 
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground">
-        Toca dos piezas para intercambiarlas y reconstruir la foto.
-      </p>
-      <div
-        className="mt-3 grid gap-1 rounded-2xl border border-border bg-secondary p-1"
-        style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
-      >
-        {order.map((piece, slot) => {
-          const col = piece % COLS;
-          const row = Math.floor(piece / COLS);
-          return (
-            <button
-              key={slot}
-              onClick={() => tap(slot)}
-              aria-label={`Pieza ${slot + 1}`}
-              className={`aspect-square rounded-md transition ${picked === slot ? "ring-2 ring-ring ring-offset-2 ring-offset-card scale-95" : piece === slot && !solved ? "ring-[3px] ring-inset ring-[oklch(0.72_0.19_145)]" : ""} ${solved ? "cursor-default" : "active:scale-95"}`}
-              style={{
-                backgroundImage: `url(${image})`,
-                backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
-                backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
-              }}
-            />
-          );
-        })}
-      </div>
-      <p className="mt-3 text-sm text-muted-foreground">Movimientos: {moves}</p>
-      {solved && (
-        <p className="mt-5 rounded-2xl bg-secondary p-4 text-center text-lg animate-in fade-in zoom-in">
-          {reward}
-        </p>
+      {solved ? (
+        <div className="animate-in fade-in zoom-in duration-700">
+          <img
+            src={image}
+            alt="La foto completa"
+            className="w-full rounded-2xl border border-border object-cover shadow-lg"
+          />
+          <p className="mt-4 rounded-2xl bg-secondary p-4 text-center text-lg">{reward}</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Lo has resuelto en {moves} {moves === 1 ? "movimiento" : "movimientos"}.
+          </p>
+        </div>
+      ) : (
+        <>
+          <p className="text-sm text-muted-foreground">
+            Toca dos piezas para intercambiarlas y reconstruir la foto.
+          </p>
+          <div
+            className="mt-3 grid gap-1 rounded-2xl border border-border bg-secondary p-1"
+            style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)` }}
+          >
+            {order.map((piece, slot) => {
+              const col = piece % COLS;
+              const row = Math.floor(piece / COLS);
+              return (
+                <button
+                  key={slot}
+                  onClick={() => tap(slot)}
+                  aria-label={`Pieza ${slot + 1}`}
+                  className={`aspect-square rounded-md transition ${picked === slot ? "ring-2 ring-ring ring-offset-2 ring-offset-card scale-95" : piece === slot ? "ring-[3px] ring-inset ring-[oklch(0.72_0.19_145)]" : ""} active:scale-95`}
+                  style={{
+                    backgroundImage: `url(${image})`,
+                    backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
+                    backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
+                  }}
+                />
+              );
+            })}
+          </div>
+          <p className="mt-3 text-sm text-muted-foreground">Movimientos: {moves}</p>
+        </>
       )}
     </div>
   );
