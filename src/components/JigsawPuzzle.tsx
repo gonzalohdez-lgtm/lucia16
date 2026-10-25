@@ -51,7 +51,7 @@ export function JigsawPuzzle({ image, reward }: { image: string; reward: string 
               key={slot}
               onClick={() => tap(slot)}
               aria-label={`Pieza ${slot + 1}`}
-              className={`aspect-square rounded-md transition ${picked === slot ? "ring-2 ring-ring ring-offset-2 ring-offset-card scale-95" : ""} ${solved ? "cursor-default" : "active:scale-95"}`}
+              className={`aspect-square rounded-md transition ${picked === slot ? "ring-2 ring-ring ring-offset-2 ring-offset-card scale-95" : piece === slot && !solved ? "ring-[3px] ring-inset ring-[oklch(0.72_0.19_145)]" : ""} ${solved ? "cursor-default" : "active:scale-95"}`}
               style={{
                 backgroundImage: `url(${image})`,
                 backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
