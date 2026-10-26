@@ -31,6 +31,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "reasons": return <Reasons reasons={day.reasons} />;
     case "coupon": return <Coupon coupon={day.coupon} detail={day.detail} />;
     case "letter": return <Letter21 onLastSurprise={onLastSurprise} />;
+    case "journey": return <LuciaJourney />;
   }
 }
 
@@ -195,6 +196,95 @@ function Coupon({ coupon, detail }: { coupon: string; detail: string }) {
       <p className="mt-2 font-serif text-2xl">{coupon}</p>
       <p className="mt-3 text-sm">{detail}</p>
       <button className={`${btn} mt-5`} onClick={() => setUsed(true)} disabled={used}>{used ? "Canjeado ✔ (enséñaselo a Gonzalo)" : "Canjear"}</button>
+    </div>
+  );
+}
+
+
+function LuciaJourney() {
+  const [step, setStep] = useState(0);
+  const [lost, setLost] = useState(false);
+  const [won, setWon] = useState(false);
+
+  const stages = [
+    { prompt: "¿Qué camino eliges?", options: ["Conocer a Gonzalo", "No conocer a Gonzalo"], correct: 1, loseText: "Has perdido" },
+    { prompt: "¿Qué haces ahora?", options: ["Hablar con él", "No tener contacto con él", "Esperar a que él te hable"], correct: 0, loseText: "Has perdido" },
+    { prompt: "¿Qué quieres?", options: ["Quiero que sea mi novio", "No quiero que sea mi novio"], correct: 0, loseText: "Has perdido" },
+    { prompt: "¿Cuánto queréis durar?", options: ["Dejarlo al poco tiempo", "Durar un año con él", "Durar toda la vida"], correct: 2, loseText: "Habrás perdido" },
+    { prompt: "¿Qué os gustaría tener?", options: ["Tener dos hijos", "Tener un hijo", "No tener nada"], correct: 0, loseText: "Has perdido" },
+    { prompt: "¿Y al final?", options: ["Casarse", "No casarse"], correct: 0, loseText: "Has perdido" },
+  ];
+
+  const choose = (index: number) => {
+    if (index !== stages[step].correct) {
+      setLost(true);
+      return;
+    }
+    if (step === stages.length - 1) setWon(true);
+    else setStep((current) => current + 1);
+  };
+
+  const restart = () => { setStep(0); setLost(false); setWon(false); };
+
+  return (
+    <div className="space-y-5">
+      {!won && !lost && (
+        <>
+          <p className="text-center text-sm text-muted-foreground">Una aventura de decisiones · Paso {step + 1} de {stages.length}</p>
+          <div className="rounded-3xl border border-border bg-gradient-to-b from-secondary/70 to-background p-5 text-center">
+            <p className="mb-2 font-serif text-xl font-semibold">Lucía</p>
+            <div className="mx-auto grid h-28 w-28 place-items-center rounded-full border border-border bg-card text-6xl shadow-sm" aria-label="Lucía, personaje del juego">👩🏻</div>
+            {step === 0 ? (
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button className={option} onClick={() => choose(0)}>↙️ <span className="block mt-2">Conocer a Gonzalo</span></button>
+                <button className={option} onClick={() => choose(1)}>↘️ <span className="block mt-2">No conocer a Gonzalo</span></button>
+              </div>
+            ) : (
+              <>
+                <p className="mt-5 text-lg font-medium">{stages[step].prompt}</p>
+                <div className="mt-3 space-y-2">
+                  {stages[step].options.map((text, index) => (
+                    <button key={text} className={option} onClick={() => choose(index)}>{text}</button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )}
+
+      {lost && (
+        <div className="animate-in zoom-in rounded-3xl border border-border bg-secondary/60 p-6 text-center">
+          <div className="text-5xl">🥺</div>
+          <h3 className="mt-3 font-serif text-3xl">Has perdido</h3>
+          <p className="mt-2 text-muted-foreground">¡Vuelve a intentarlo! Seguro que encuentras el camino correcto 🩵</p>
+          <button className={`${btn} mt-4`} onClick={restart}>Volver a jugar</button>
+        </div>
+      )}
+
+      {won && (
+        <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-secondary to-background p-5 text-center">
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            {Array.from({ length: 18 }, (_, i) => <span key={i} className="absolute animate-bounce text-xl" style={{ left: `${(i * 37) % 100}%`, top: `${(i * 23) % 90}%`, animationDelay: `${(i % 6) * 0.15}s` }}>{["✨", "🩵", "🎉", "💖"][i % 4]}</span>)}
+          </div>
+          <div className="relative animate-in fade-in zoom-in">
+            <p className="eyebrow text-muted-foreground">Meta alcanzada</p>
+            <h3 className="mt-2 font-serif text-3xl md:text-4xl">¡Felicidades, has ganado!</h3>
+            <p className="mt-2 text-muted-foreground">Elegiste el camino de una vida juntos 🩵</p>
+            <div className="my-6 flex items-end justify-center gap-2 sm:gap-4" aria-label="Lucía, Gonzalo y sus dos hijos cruzan la meta">
+              <span className="text-5xl sm:text-6xl">👩🏻</span>
+              <span className="text-5xl sm:text-6xl">👨🏻</span>
+              <span className="text-3xl sm:text-4xl">🧒🏻</span>
+              <span className="text-3xl sm:text-4xl">👧🏻</span>
+            </div>
+            <div className="mx-auto h-2 max-w-xs overflow-hidden rounded-full bg-background">
+              <div className="h-full w-full origin-left animate-[finish-line_1.4s_ease-out_forwards] rounded-full bg-primary" />
+            </div>
+            <p className="mt-4 text-sm">Lucía + Gonzalo + dos peques = para siempre 💍</p>
+            <button className={`${btn} mt-4`} onClick={restart}>Jugar otra vez</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
