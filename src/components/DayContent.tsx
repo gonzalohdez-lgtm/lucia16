@@ -207,7 +207,7 @@ function LuciaJourney() {
   const [won, setWon] = useState(false);
 
   const stages = [
-    { prompt: "¿Qué camino eliges?", options: ["Conocer a Gonzalo", "No conocer a Gonzalo"], correct: 1, loseText: "Has perdido" },
+    { prompt: "¿Qué camino eliges?", options: ["Conocer a Gonzalo", "No conocer a Gonzalo"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Qué haces ahora?", options: ["Hablar con él", "No tener contacto con él", "Esperar a que él te hable"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Qué quieres?", options: ["Quiero que sea mi novio", "No quiero que sea mi novio"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Cuánto queréis durar?", options: ["Dejarlo al poco tiempo", "Durar un año con él", "Durar toda la vida"], correct: 2, loseText: "Habrás perdido" },
@@ -233,7 +233,7 @@ function LuciaJourney() {
           <p className="text-center text-sm text-muted-foreground">Una aventura de decisiones · Paso {step + 1} de {stages.length}</p>
           <div className="rounded-3xl border border-border bg-gradient-to-b from-secondary/70 to-background p-5 text-center">
             <p className="mb-2 font-serif text-xl font-semibold">Lucía</p>
-            <div className="mx-auto grid h-28 w-28 place-items-center rounded-full border border-border bg-card text-6xl shadow-sm" aria-label="Lucía, personaje del juego">👩🏻</div>
+            <div className="mx-auto grid h-28 w-28 place-items-center rounded-full border border-border bg-card text-6xl shadow-sm" aria-label="Lucía, personaje rubia del juego">👱🏻‍♀️</div>
             {step === 0 ? (
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button className={option} onClick={() => choose(0)}>↙️ <span className="block mt-2">Conocer a Gonzalo</span></button>
@@ -272,7 +272,7 @@ function LuciaJourney() {
             <h3 className="mt-2 font-serif text-3xl md:text-4xl">¡Felicidades, has ganado!</h3>
             <p className="mt-2 text-muted-foreground">Elegiste el camino de una vida juntos 🩵</p>
             <div className="my-6 flex items-end justify-center gap-2 sm:gap-4" aria-label="Lucía, Gonzalo y sus dos hijos cruzan la meta">
-              <span className="text-5xl sm:text-6xl">👩🏻</span>
+              <span className="text-5xl sm:text-6xl">👱🏻‍♀️</span>
               <span className="text-5xl sm:text-6xl">👨🏻</span>
               <span className="text-3xl sm:text-4xl">🧒🏻</span>
               <span className="text-3xl sm:text-4xl">👧🏻</span>
