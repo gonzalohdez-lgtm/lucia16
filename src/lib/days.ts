@@ -16,7 +16,7 @@ export type Day =
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
