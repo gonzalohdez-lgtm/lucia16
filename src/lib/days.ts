@@ -11,7 +11,8 @@ export type Day =
   | { type: "riddle"; title: string; riddle: string; answer: string; reward: string }
   | { type: "reasons"; title: string; reasons: string[] }
   | { type: "coupon"; title: string; coupon: string; detail: string }
-  | { type: "letter"; title: string };
+  | { type: "letter"; title: string }
+  | { type: "journey"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", gift: "🎁",
@@ -35,7 +36,7 @@ export const days: Day[] = [
   { type: "riddle", title: "Adivinanza", riddle: "Pasa por Sevilla y nos ha visto pasear de noche. ¿Qué es?", answer: "guadalquivir", reward: "¡Eso es! Nuestro río 🌙" },
   { type: "reasons", title: "Razones", reasons: ["Tu risa", "Tus abrazos", "Cómo me miras", "Tus tonterías", "Que eres tú", "Todo"] },
   { type: "message", title: "Un recuerdo", text: "¿Te acuerdas de la primera vez que nos hicimos una foto juntos? Yo sí. 🩵" },
-  { type: "scratch", title: "Rasca otra vez", prize: "Vale por una peli elegida por ti 🍿" },
+  { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
   { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
