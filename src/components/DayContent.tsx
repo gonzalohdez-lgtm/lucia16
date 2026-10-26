@@ -207,7 +207,7 @@ function LuciaJourney() {
   const [won, setWon] = useState(false);
 
   const stages = [
-    { prompt: "¿Qué camino eliges?", options: ["Conocer a Gonzalo", "No conocer a Gonzalo"], correct: 1, loseText: "Has perdido" },
+    { prompt: "¿Qué camino eliges?", options: ["Conocer a Gonzalo", "No conocer a Gonzalo"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Qué haces ahora?", options: ["Hablar con él", "No tener contacto con él", "Esperar a que él te hable"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Qué quieres?", options: ["Quiero que sea mi novio", "No quiero que sea mi novio"], correct: 0, loseText: "Has perdido" },
     { prompt: "¿Cuánto queréis durar?", options: ["Dejarlo al poco tiempo", "Durar un año con él", "Durar toda la vida"], correct: 2, loseText: "Habrás perdido" },
