@@ -29,6 +29,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "memory": return <Memory emojis={day.emojis} reward={day.reward} />;
     case "photomemory": return <PhotoMemory reward={day.reward} />;
     case "photodates": return <PhotoDates />;
+    case "surprisechoice": return <SurpriseChoice />;
     case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
     case "riddle": return <Riddle day={day} />;
@@ -38,6 +39,58 @@ function render(day: Day, onLastSurprise: () => void) {
     case "journey": return <LuciaJourney />;
     case "wordsearch": return <WordSearch />;
   }
+}
+
+
+function SurpriseChoice() {
+  const storageKey = "lucia-day7-surprise-choice";
+  const surprises = [
+    "Te debo un masaje 🩵",
+    "Ver una peli juntos. No negociable. 🎬",
+    "Te compro algo que te haga ilusión 🎁",
+    "Durante un día, hacemos todo lo que tú quieras 👑",
+  ];
+  const [chosen, setChosen] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved !== null && Number.isInteger(Number(saved)) && Number(saved) >= 0 && Number(saved) < surprises.length) {
+        setChosen(Number(saved));
+      }
+    } catch {}
+  }, []);
+
+  const choose = (index: number) => {
+    if (chosen !== null) return;
+    try { window.localStorage.setItem(storageKey, String(index)); } catch {}
+    setChosen(index);
+  };
+
+  return (
+    <div className="space-y-4">
+      <p className="text-center text-sm text-muted-foreground">Hay 4 sorpresas, pero solo puedes elegir una… 🤫🩵</p>
+      <div className="grid grid-cols-2 gap-3">
+        {surprises.map((surprise, index) => (
+          <button key={index} type="button" onClick={() => choose(index)} disabled={chosen !== null}
+            className={`aspect-square rounded-2xl border-2 p-3 text-center transition ${chosen === index ? "border-primary bg-secondary" : "border-border bg-primary text-primary-foreground"} ${chosen !== null && chosen !== index ? "opacity-50" : "hover:scale-[1.02]"}`}>
+            {chosen === index ? (
+              <span className="flex h-full flex-col items-center justify-center gap-2">
+                <span className="text-3xl">🩵</span>
+                <span className="text-sm font-semibold">{surprise}</span>
+              </span>
+            ) : (
+              <span className="flex h-full flex-col items-center justify-center gap-2">
+                <span className="text-4xl">❓</span>
+                <span className="text-sm font-medium">Sorpresa {index + 1}</span>
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+      {chosen !== null && <p className="rounded-2xl bg-secondary p-4 text-center text-sm">¡Esta es tu sorpresa! Las otras tres ya se quedan guardadas para siempre… cerradas 🤭</p>}
+    </div>
+  );
 }
 
 function Letter21({ onLastSurprise }: { onLastSurprise: () => void }) {
