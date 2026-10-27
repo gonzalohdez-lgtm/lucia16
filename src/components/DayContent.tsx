@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
 import { JigsawPuzzle } from "@/components/JigsawPuzzle";
+import { PhotoDates } from "@/components/PhotoDates";
 import { photos } from "@/lib/media";
 
 const btn = "pill-button pill-dark";
@@ -27,6 +28,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "scratch": return <Scratch prize={day.prize} />;
     case "memory": return <Memory emojis={day.emojis} reward={day.reward} />;
     case "photomemory": return <PhotoMemory reward={day.reward} />;
+    case "photodates": return <PhotoDates />;
     case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
     case "riddle": return <Riddle day={day} />;
