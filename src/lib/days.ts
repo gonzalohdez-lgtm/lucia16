@@ -17,11 +17,12 @@ export type Day =
   | { type: "coupon"; title: string; coupon: string; detail: string }
   | { type: "letter"; title: string }
   | { type: "journey"; title: string }
-  | { type: "wordsearch"; title: string };
+  | { type: "wordsearch"; title: string }
+  | { type: "fortunecookie"; title: string; message: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -51,7 +52,7 @@ export const days: Day[] = [
   { type: "quiz", title: "Test exprés", questions: [
     { q: "¿Cuántos años vas a cumplir?", options: ["15", "16", "17"], answer: 1 },
   ], reward: "¡16! Ya casi está 🎂" },
-  { type: "gift", title: "Casi casi", inside: "Faltan 3 días… y lo mejor está por llegar ✨" },
+  { type: "fortunecookie", title: "Galleta de la fortuna 🥠", message: "Eres lo mejor que me ha pasado" },
   { type: "reasons", title: "Más razones", reasons: ["Tu pelo", "Tu voz", "Tus planes", "Tu paciencia conmigo"] },
   { type: "message", title: "Mañana es el día", text: "Mañana cumples 16.\nDuerme bien, que mañana hay sorpresa 🩵" },
   { type: "letter", title: "Feliz cumpleaños, Lucía" },
