@@ -35,7 +35,7 @@ export const days: Day[] = [
   ], reward: "¡Perfecta! Me conoces mejor que nadie 🩵" },
   { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
   { type: "wordsearch", title: "Sopa de letras 🩵" },
-  { type: "coupon", title: "Un cupón", coupon: "Vale por un plan sorpresa", detail: "Tú eliges el día, yo me encargo del resto." },
+  { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
   { type: "riddle", title: "Adivinanza", riddle: "Pasa por Sevilla y nos ha visto pasear de noche. ¿Qué es?", answer: "guadalquivir", reward: "¡Eso es! Nuestro río 🌙" },
   { type: "reasons", title: "Razones", reasons: ["Tu risa", "Tus abrazos", "Cómo me miras", "Tus tonterías", "Que eres tú", "Todo"] },
   { type: "message", title: "Un recuerdo", text: "¿Te acuerdas de la primera vez que nos hicimos una foto juntos? Yo sí. 🩵" },
@@ -43,7 +43,7 @@ export const days: Day[] = [
   { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
-  { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
+  { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
   { type: "riddle", title: "Otra adivinanza", riddle: "Lo tienes cada vez que me miras y yo cada vez que te veo. Empieza por S.", answer: "sonrisa", reward: "Exacto 😊" },
   { type: "message", title: "Un secreto", text: "No te lo he dicho nunca, pero cuando estoy contigo se me pasa el tiempo volando." },
   { type: "quiz", title: "Test exprés", questions: [
