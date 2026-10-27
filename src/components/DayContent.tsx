@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
 import { JigsawPuzzle } from "@/components/JigsawPuzzle";
 import { PhotoDates } from "@/components/PhotoDates";
+import { CoupleQuestions } from "@/components/CoupleQuestions";
 import { photos } from "@/lib/media";
 
 const btn = "pill-button pill-dark";
@@ -30,6 +31,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "photomemory": return <PhotoMemory reward={day.reward} />;
     case "photodates": return <PhotoDates />;
     case "surprisechoice": return <SurpriseChoice />;
+    case "couplequestions": return <CoupleQuestions />;
     case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
     case "riddle": return <Riddle day={day} />;
