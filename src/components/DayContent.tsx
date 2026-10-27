@@ -32,6 +32,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "coupon": return <Coupon coupon={day.coupon} detail={day.detail} />;
     case "letter": return <Letter21 onLastSurprise={onLastSurprise} />;
     case "journey": return <LuciaJourney />;
+    case "wordsearch": return <WordSearch />;
   }
 }
 
@@ -287,4 +288,96 @@ function LuciaJourney() {
       )}
     </div>
   );
+}
+
+
+const SEARCH_WORDS = ["LUCIA", "HAMBURGUESA", "TEAMO", "HALLOWEEN", "CARNAVALES", "SECTA", "13MARZO"];
+const GRID_SIZE = 15;
+
+function makeWordGrid() {
+  const directions = [[0,1],[1,0],[0,-1],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+  for (let attempt = 0; attempt < 300; attempt++) {
+    const grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(""));
+    let success = true;
+    for (const word of [...SEARCH_WORDS].sort((a,b) => b.length-a.length)) {
+      let placed = false;
+      for (let tries = 0; tries < 500 && !placed; tries++) {
+        const [dr,dc] = directions[Math.floor(Math.random()*directions.length)];
+        const r = Math.floor(Math.random()*GRID_SIZE), col = Math.floor(Math.random()*GRID_SIZE);
+        const er = r + dr*(word.length-1), ec = col + dc*(word.length-1);
+        if (er < 0 || er >= GRID_SIZE || ec < 0 || ec >= GRID_SIZE) continue;
+        let fits = true;
+        for (let k=0;k<word.length;k++) if (grid[r+dr*k][col+dc*k] && grid[r+dr*k][col+dc*k] !== word[k]) fits=false;
+        if (!fits) continue;
+        for (let k=0;k<word.length;k++) grid[r+dr*k][col+dc*k]=word[k];
+        placed=true;
+      }
+      if (!placed) { success=false; break; }
+    }
+    if (success) {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      return grid.map(row => row.map(ch => ch || letters[Math.floor(Math.random()*letters.length)]));
+    }
+  }
+  return Array.from({length:GRID_SIZE},()=>Array.from({length:GRID_SIZE},()=>"A"));
+}
+
+function WordSearch() {
+  const grid = useMemo(() => makeWordGrid(), []);
+  const [start, setStart] = useState<[number,number] | null>(null);
+  const [end, setEnd] = useState<[number,number] | null>(null);
+  const [found, setFound] = useState<string[]>([]);
+  const [trail, setTrail] = useState<{cells:[number,number][]; ok:boolean} | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const getCell = (target: EventTarget | null): [number,number] | null => {
+    const el = target instanceof Element ? target.closest("[data-word-cell]") : null;
+    if (!el) return null;
+    return [Number(el.getAttribute("data-row")), Number(el.getAttribute("data-col"))];
+  };
+  const lineCells = (a:[number,number], b:[number,number]) => {
+    const dr=b[0]-a[0], dc=b[1]-a[1];
+    if (!(dr===0 || dc===0 || Math.abs(dr)===Math.abs(dc))) return [];
+    const steps=Math.max(Math.abs(dr),Math.abs(dc));
+    const sr=Math.sign(dr), sc=Math.sign(dc);
+    return Array.from({length:steps+1},(_,i):[number,number]=>[a[0]+sr*i,a[1]+sc*i]);
+  };
+  const finish = (cell:[number,number] | null) => {
+    if (!start || !cell) { setStart(null); setEnd(null); return; }
+    const cells=lineCells(start,cell);
+    const word=cells.map(([r,col])=>grid[r][col]).join("");
+    const reverse=[...word].reverse().join("");
+    const match=SEARCH_WORDS.find(w=>w===word || w===reverse);
+    const ok=!!match && !found.includes(match);
+    setTrail({cells,ok});
+    if (ok && match) setFound(prev=>[...prev,match]);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current=setTimeout(()=>setTrail(null), ok ? 1000 : 750);
+    setStart(null); setEnd(null);
+  };
+  const trailCells = trail?.cells ?? (start && end ? lineCells(start,end) : []);
+  const trailSet = new Set(trailCells.map(([r,col])=>r+"-"+col));
+  const done=found.length===SEARCH_WORDS.length;
+  return <div className="space-y-4">
+    <p className="text-sm text-muted-foreground">Encuentra las 7 palabras. Arrastra el cursor o el dedo desde la primera letra hasta la última; pueden estar en horizontal, vertical o diagonal.</p>
+    <div className="grid grid-cols-15 gap-0.5 select-none touch-none rounded-xl border border-border bg-card p-1"
+      style={{gridTemplateColumns:"repeat(15,minmax(0,1fr))"}}
+      onPointerDown={e=>{const cell=getCell(e.target); if(cell){if(timer.current)clearTimeout(timer.current);setTrail(null);setStart(cell);setEnd(cell);(e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);}}}
+      onPointerMove={e=>{if(!start)return;const cell=getCell(document.elementFromPoint(e.clientX,e.clientY));if(cell)setEnd(cell);}}
+      onPointerUp={e=>{if(start){const cell=getCell(document.elementFromPoint(e.clientX,e.clientY));finish(cell);}}}
+      onPointerCancel={()=>{setStart(null);setEnd(null);}}>
+      {grid.map((row,r)=>row.map((letter,col)=>{
+        const key=r+"-"+col, isTrail=trailSet.has(key);
+        const isFound=found.some(w=>false) || false;
+        const color=isTrail ? (trail ? (trail.ok ? "bg-emerald-500 text-white" : "bg-red-500 text-white") : "bg-primary/30") : "";
+        return <div key={key} data-word-cell="true" data-row={r} data-col={col}
+          className={`aspect-square flex items-center justify-center rounded-sm text-[clamp(8px,2.3vw,14px)] sm:text-sm font-semibold ${color || (isFound ? "bg-emerald-500 text-white" : "bg-background")} `}
+          aria-label={letter}>{letter}</div>;
+      }))}
+    </div>
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {SEARCH_WORDS.map(word=><div key={word} className={`rounded-xl border border-border px-3 py-2 text-center text-sm font-semibold tracking-wider ${found.includes(word) ? "bg-emerald-500/15 text-emerald-700 line-through" : "bg-background"}`}>{word}</div>)}
+    </div>
+    {trail && <p className={`text-center text-sm font-medium ${trail.ok ? "text-emerald-600" : "text-red-500"}`}>{trail.ok ? "¡Palabra correcta! 🟢" : "Esa palabra no es correcta. 🔴"}</p>}
+    {done && <Reward text="¡Las has encontrado todas! 🩵" />}
+  </div>;
 }
