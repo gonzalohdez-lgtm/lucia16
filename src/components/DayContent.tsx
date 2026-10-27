@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
 import { JigsawPuzzle } from "@/components/JigsawPuzzle";
+import { photos } from "@/lib/media";
 
 const btn = "pill-button pill-dark";
 const option = "w-full rounded-2xl border border-border bg-background px-4 py-3 text-left transition hover:bg-secondary";
@@ -25,6 +26,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "quiz": return <Quiz day={day} />;
     case "scratch": return <Scratch prize={day.prize} />;
     case "memory": return <Memory emojis={day.emojis} reward={day.reward} />;
+    case "photomemory": return <PhotoMemory reward={day.reward} />;
     case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
     case "riddle": return <Riddle day={day} />;
@@ -137,6 +139,55 @@ function Memory({ emojis, reward }: { emojis: string[]; reward: string }) {
       </div>
       <p className="mt-3 text-sm text-muted-foreground">Intentos: {tries}</p>
       {found.length === emojis.length && <Reward text={reward} />}
+    </div>
+  );
+}
+
+
+function PhotoMemory({ reward }: { reward: string }) {
+  const images = useMemo(() => shuffle([
+    { id: "p01", src: photos.p01 }, { id: "p02", src: photos.p02 },
+    { id: "p03", src: photos.p03 }, { id: "p04", src: photos.p04 },
+    { id: "p05", src: photos.p05 }, { id: "p06", src: photos.p06 },
+    { id: "p01", src: photos.p01 }, { id: "p02", src: photos.p02 },
+    { id: "p03", src: photos.p03 }, { id: "p04", src: photos.p04 },
+    { id: "p05", src: photos.p05 }, { id: "p06", src: photos.p06 },
+  ]), []);
+  const [open, setOpen] = useState<number[]>([]);
+  const [found, setFound] = useState<string[]>([]);
+  const [tries, setTries] = useState(0);
+  const [locked, setLocked] = useState(false);
+  const flip = (i: number) => {
+    if (locked || open.includes(i) || found.includes(images[i].id)) return;
+    const next = [...open, i];
+    setOpen(next);
+    if (next.length === 2) {
+      setTries(t => t + 1);
+      if (images[next[0]].id === images[next[1]].id) {
+        setFound(f => [...f, images[i].id]);
+        setOpen([]);
+      } else {
+        setLocked(true);
+        setTimeout(() => { setOpen([]); setLocked(false); }, 850);
+      }
+    }
+  };
+  return (
+    <div>
+      <p className="mb-4 text-center text-sm text-muted-foreground">Encuentra las 6 parejas de nuestras fotos 🩵</p>
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+        {images.map((card, i) => {
+          const show = open.includes(i) || found.includes(card.id);
+          return (
+            <button key={i} onClick={() => flip(i)} aria-label={show ? "Foto descubierta" : "Descubrir foto"}
+              className={`aspect-square overflow-hidden rounded-2xl border border-border transition-all ${show ? "bg-background" : "bg-primary text-3xl text-primary-foreground hover:scale-[1.02]"}`}>
+              {show ? <img src={card.src} alt="Recuerdo de Lucía y Gonzalo" className="h-full w-full object-cover" /> : "🩵"}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-3 text-center text-sm text-muted-foreground">Parejas: {found.length}/6 · Intentos: {tries}</p>
+      {found.length === 6 && <Reward text={reward} />}
     </div>
   );
 }
