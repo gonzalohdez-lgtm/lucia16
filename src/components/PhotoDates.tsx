@@ -2,11 +2,10 @@ import { useMemo, useState } from "react";
 import { photos } from "@/lib/media";
 
 const pairs = [
-  { id: "foto1", src: photos.p01, date: "29 de agosto" },
-  { id: "foto3", src: photos.p03, date: "14 de agosto" },
-  { id: "foto5", src: photos.p05, date: "20 de agosto" },
-  { id: "foto7", src: photos.p07, date: "12 de junio" },
-  { id: "foto8", src: photos.p08, date: "22 de junio" },
+  { id: "foto1", src: photos.p01, date: "27 de febrero" },
+  { id: "foto2", src: photos.p03, date: "14 de marzo" },
+  { id: "foto3", src: photos.p05, date: "4 de abril" },
+  { id: "foto4", src: photos.p07, date: "4 de junio" },
 ];
 
 export function PhotoDates() {
@@ -55,8 +54,8 @@ export function PhotoDates() {
           const state = results[p.id];
           return <button key={p.id} type="button" onClick={() => choosePhoto(p.id)} disabled={state === "correct" || won}
             className={`overflow-hidden rounded-2xl border-2 text-left transition ${state === "correct" ? "border-emerald-500 bg-emerald-500/15" : state === "wrong" ? "border-red-500 bg-red-500/15" : selectedPhoto === p.id ? "border-primary ring-2 ring-primary/30" : "border-border bg-card"}`}>
-            <img src={p.src} alt={`Foto ${[1,3,5,7,8][i]}`} className="aspect-square w-full object-cover" />
-            <span className="block p-2 text-center text-sm font-medium">{state === "correct" ? "¡Correcta! ✓" : `Foto ${[1,3,5,7,8][i]}`}</span>
+            <img src={p.src} alt={`Foto ${i + 1}`} className="aspect-square w-full object-cover" />
+            <span className="block p-2 text-center text-sm font-medium">{state === "correct" ? "¡Correcta! ✓" : `Foto ${i + 1}`}</span>
           </button>;
         })}
       </div>
@@ -72,7 +71,7 @@ export function PhotoDates() {
           </button>;
         })}
       </div>
-      <p className="text-center text-xs text-muted-foreground">Parejas acertadas: {Object.values(results).filter((v) => v === "correct").length}/5</p>
+      <p className="text-center text-xs text-muted-foreground">Parejas acertadas: {Object.values(results).filter((v) => v === "correct").length}/4</p>
       {won && <div className="animate-in zoom-in rounded-2xl border border-emerald-500 bg-emerald-500/10 p-5 text-center text-xl font-semibold text-emerald-700">Enhorabuena, has ganado.</div>}
     </div>
   );
