@@ -18,11 +18,12 @@ export type Day =
   | { type: "letter"; title: string }
   | { type: "journey"; title: string }
   | { type: "wordsearch"; title: string }
-  | { type: "fortunecookie"; title: string; message: string };
+  | { type: "fortunecookie"; title: string; message: string }
+  | { type: "safe"; title: string; code: string; message: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
