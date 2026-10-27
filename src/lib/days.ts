@@ -19,7 +19,7 @@ export type Day =
   | { type: "wordsearch"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
-  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", gift: "🎁",
+  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠",
 };
 
