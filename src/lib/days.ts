@@ -6,6 +6,7 @@ export type Day =
   | { type: "scratch"; title: string; prize: string }
   | { type: "memory"; title: string; emojis: string[]; reward: string }
   | { type: "photomemory"; title: string; reward: string }
+  | { type: "photodates"; title: string }
   | { type: "gift"; title: string; inside: string }
   | { type: "racing"; title: string; url: string }
   | { type: "puzzle"; title: string; image: string; reward: string }
@@ -17,7 +18,7 @@ export type Day =
   | { type: "wordsearch"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
-  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", gift: "🎁",
+  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠",
 };
 
@@ -42,7 +43,7 @@ export const days: Day[] = [
   { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
-  { type: "photomemory", title: "Encuentra la pareja 📸", reward: "¡Has encontrado nuestras 6 parejas! Cada foto me recuerda lo bonito que es estar contigo 🩵" },
+  { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
   { type: "riddle", title: "Otra adivinanza", riddle: "Lo tienes cada vez que me miras y yo cada vez que te veo. Empieza por S.", answer: "sonrisa", reward: "Exacto 😊" },
   { type: "message", title: "Un secreto", text: "No te lo he dicho nunca, pero cuando estoy contigo se me pasa el tiempo volando." },
   { type: "quiz", title: "Test exprés", questions: [
