@@ -12,7 +12,8 @@ export type Day =
   | { type: "reasons"; title: string; reasons: string[] }
   | { type: "coupon"; title: string; coupon: string; detail: string }
   | { type: "letter"; title: string }
-  | { type: "journey"; title: string }\n  | { type: "wordsearch"; title: string };
+  | { type: "journey"; title: string }
+  | { type: "wordsearch"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", gift: "🎁",
