@@ -8,6 +8,7 @@ export type Day =
   | { type: "photomemory"; title: string; reward: string }
   | { type: "photodates"; title: string }
   | { type: "surprisechoice"; title: string }
+  | { type: "couplequestions"; title: string }
   | { type: "gift"; title: string; inside: string }
   | { type: "racing"; title: string; url: string }
   | { type: "puzzle"; title: string; image: string; reward: string }
@@ -19,7 +20,7 @@ export type Day =
   | { type: "wordsearch"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
-  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", gift: "🎁",
+  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠",
 };
 
@@ -38,7 +39,7 @@ export const days: Day[] = [
   { type: "wordsearch", title: "Sopa de letras 🩵" },
   { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
   { type: "surprisechoice", title: "Elige tu sorpresa 🎁" },
-  { type: "reasons", title: "Razones", reasons: ["Tu risa", "Tus abrazos", "Cómo me miras", "Tus tonterías", "Que eres tú", "Todo"] },
+  { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
   { type: "message", title: "Un recuerdo", text: "¿Te acuerdas de la primera vez que nos hicimos una foto juntos? Yo sí. 🩵" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
   { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
