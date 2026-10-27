@@ -54,7 +54,7 @@ export const days: Day[] = [
     { q: "¿Cuántos años vas a cumplir?", options: ["15", "16", "17"], answer: 1 },
   ], reward: "¡16! Ya casi está 🎂" },
   { type: "fortunecookie", title: "Galleta de la fortuna 🥠", message: "Eres lo mejor que me ha pasado" },
-  { type: "reasons", title: "Más razones", reasons: ["Tu pelo", "Tu voz", "Tus planes", "Tu paciencia conmigo"] },
+  { type: "safe", title: "Caja fuerte secreta 🔐", code: "1303", message: "Si hoy no tienes un buen dia, quiero que recuerdes que no tienes que poder con todo siempre. Puedes estar cansada, triste o de mal humor, que no pasa absolutamente nada. Si quieres hablar, te escucho; si necesitas distraerte, intentaré hacerte reír; y si necesitas un abrazo, te lo doy. No tengo una solución mágica para todo, pero sí muchas ganas de estar a tu lado." },
   { type: "message", title: "Mañana es el día", text: "Mañana cumples 16.\nDuerme bien, que mañana hay sorpresa 🩵" },
   { type: "letter", title: "Feliz cumpleaños, Lucía" },
 ];
