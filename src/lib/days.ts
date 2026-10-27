@@ -12,11 +12,11 @@ export type Day =
   | { type: "reasons"; title: string; reasons: string[] }
   | { type: "coupon"; title: string; coupon: string; detail: string }
   | { type: "letter"; title: string }
-  | { type: "journey"; title: string };
+  | { type: "journey"; title: string }\n  | { type: "wordsearch"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -31,7 +31,7 @@ export const days: Day[] = [
     { q: "¿Algo que no soportas que haga?", options: ["Que no te escuche", "Silbar", "Que te haga cosquillas", "Que te bese"], answer: 0 },
   ], reward: "¡Perfecta! Me conoces mejor que nadie 🩵" },
   { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
-  { type: "memory", title: "Parejas", emojis: ["🩵", "🌸", "🌙", "✨"], reward: "¡Lo has conseguido! 🌸" },
+  { type: "wordsearch", title: "Sopa de letras 🩵" },
   { type: "coupon", title: "Un cupón", coupon: "Vale por un plan sorpresa", detail: "Tú eliges el día, yo me encargo del resto." },
   { type: "riddle", title: "Adivinanza", riddle: "Pasa por Sevilla y nos ha visto pasear de noche. ¿Qué es?", answer: "guadalquivir", reward: "¡Eso es! Nuestro río 🌙" },
   { type: "reasons", title: "Razones", reasons: ["Tu risa", "Tus abrazos", "Cómo me miras", "Tus tonterías", "Que eres tú", "Todo"] },
