@@ -518,7 +518,8 @@ const roulettePrizes = [
 ];
 
 function SurpriseRoulette() {
-  const storageKey = "lucia-roulette-v1";
+  const testMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("ruleta-test") === "1";
+  const storageKey = testMode ? "lucia-roulette-test-v1" : "lucia-roulette-v1";
   const [spins, setSpins] = useState<number[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
   const [spinning, setSpinning] = useState(false);
@@ -542,9 +543,9 @@ function SurpriseRoulette() {
   };
 
   const spin = () => {
-    if (spinning || spins.length >= 2 || selected !== null) return;
+    if (spinning || (!testMode && spins.length >= 2) || selected !== null) return;
     setSpinning(true);
-    const available = roulettePrizes.map((_, i) => i).filter(i => !spins.includes(i));
+    const available = testMode ? roulettePrizes.map((_, i) => i) : roulettePrizes.map((_, i) => i).filter(i => !spins.includes(i));
     const result = available[Math.floor(Math.random() * available.length)];
     const segment = 360 / roulettePrizes.length;
     const target = rotation + 360 * 5 + (360 - (result * segment + segment / 2));
@@ -558,7 +559,7 @@ function SurpriseRoulette() {
   };
 
   const choose = (index: number) => {
-    if (selected !== null || spins.length !== 2) return;
+    if (selected !== null || (!testMode && spins.length !== 2) || spins.length < 2) return;
     setSelected(index);
     setShowPrize(true);
     persist(spins, index, true);
@@ -569,8 +570,8 @@ function SurpriseRoulette() {
   return (
     <div className="mx-auto max-w-xl space-y-5">
       <div className="rounded-3xl border border-pink-200/70 bg-gradient-to-br from-rose-50 via-white to-sky-50 p-4 sm:p-6">
-        <p className="text-center text-sm font-medium text-rose-500">DOS GIROS. DOS POSIBILIDADES. UNA SOLA SORPRESA. 🩵</p>
-        <p className="mx-auto mt-2 max-w-md text-center text-sm text-slate-600">Gira la ruleta dos veces. Al final tendrás que elegir una de las dos sorpresas… y la otra quedará guardada para siempre.</p>
+        <p className="text-center text-sm font-medium text-rose-500">{testMode ? "MODO DE PRUEBA ACTIVADO · GIROS ILIMITADOS 🧪" : "DOS GIROS. DOS POSIBILIDADES. UNA SOLA SORPRESA. 🩵"}</p>
+        <p className="mx-auto mt-2 max-w-md text-center text-sm text-slate-600">{testMode ? "Puedes girarla todas las veces que quieras para comprobar las recompensas. En este modo se pueden repetir premios." : "Gira la ruleta dos veces. Al final tendrás que elegir una de las dos sorpresas… y la otra quedará guardada para siempre."}</p>
         <div className="relative mx-auto mt-6 aspect-square w-full max-w-[340px]">
           <div className="absolute -top-2 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow">▼</div>
           <div className="absolute inset-0 rounded-full border-[7px] border-white shadow-xl transition-transform duration-[4200ms] ease-[cubic-bezier(0.12,0.75,0.08,1)]"
@@ -588,10 +589,10 @@ function SurpriseRoulette() {
           </div>)}
         </div>
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-600">Tiradas utilizadas: <strong>{spins.length}/2</strong></p>
-          <button type="button" onClick={spin} disabled={spinning || spins.length >= 2 || selected !== null}
+          <p className="text-sm text-slate-600">Tiradas utilizadas: <strong>{spins.length}{testMode ? " (ilimitadas)" : "/2"}</strong></p>
+          <button type="button" onClick={spin} disabled={spinning || (!testMode && spins.length >= 2) || selected !== null}
             className="mt-3 rounded-full bg-rose-500 px-7 py-3 font-semibold text-white shadow-lg transition hover:scale-105 hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50">
-            {spinning ? "Girando… ✨" : spins.length === 2 ? "¡Ya tienes tus dos opciones!" : `GIRAR LA RULETA ${spins.length + 1}/2 🎡`}
+            {spinning ? "Girando… ✨" : (!testMode && spins.length === 2) ? "¡Ya tienes tus dos opciones!" : testMode ? "GIRAR LA RULETA 🎡" : `GIRAR LA RULETA ${spins.length + 1}/2 🎡`}
           </button>
         </div>
       </div>
@@ -603,7 +604,7 @@ function SurpriseRoulette() {
         </div>)}
       </div>}
 
-      {spins.length === 2 && selected === null && <div className="space-y-3 rounded-3xl bg-secondary/60 p-4 text-center animate-in fade-in">
+      {(testMode ? spins.length >= 2 : spins.length === 2) && selected === null && <div className="space-y-3 rounded-3xl bg-secondary/60 p-4 text-center animate-in fade-in">
         <h3 className="font-serif text-xl">Ahora eliges tú, Lucía 🩵</h3>
         <p className="text-sm text-muted-foreground">Solo puedes abrir una. Piensa bien cuál te hace más ilusión.</p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -623,7 +624,8 @@ function SurpriseRoulette() {
           {prize.id === "secret" && <p className="rounded-2xl bg-emerald-50 p-5 text-center text-2xl font-semibold text-slate-700">Me pones 🩵</p>}
           {prize.id === "karts" && <div className="rounded-2xl bg-orange-50 p-5 text-center"><p className="text-4xl">🏎️</p><p className="mt-2 text-lg font-semibold text-slate-700">Vale por una actividad juntos</p><p className="mt-1 text-slate-600">¡Nos vamos a los karts! 🏁</p></div>}
         </div>
-        <p className="mt-5 text-sm text-muted-foreground">La otra sorpresa se queda cerrada… esta vez solo puedes abrir una. 🤭🩵</p>
+        <p className="mt-5 text-sm text-muted-foreground">{testMode ? "Modo de prueba: puedes seguir girando y comprobar otras recompensas." : "La otra sorpresa se queda cerrada… esta vez solo puedes abrir una. 🤭🩵"}</p>
+        {testMode && <button type="button" onClick={() => { setSpins([]); setSelected(null); setShowPrize(false); setRotation(0); persist([], null, false); }} className="mt-4 rounded-full bg-rose-500 px-5 py-2 font-semibold text-white">Probar otra vez ↻</button>}
       </div>}
     </div>
   );
