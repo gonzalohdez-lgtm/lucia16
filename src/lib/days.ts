@@ -19,11 +19,12 @@ export type Day =
   | { type: "journey"; title: string }
   | { type: "wordsearch"; title: string }
   | { type: "fortunecookie"; title: string; message: string }
-  | { type: "safe"; title: string; code: string; message: string };
+  | { type: "safe"; title: string; code: string; message: string }
+  | { type: "relationshipclock"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -42,7 +43,7 @@ export const days: Day[] = [
   { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
   { type: "surprisechoice", title: "Elige tu sorpresa 🎁" },
   { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
-  { type: "message", title: "Un recuerdo", text: "¿Te acuerdas de la primera vez que nos hicimos una foto juntos? Yo sí. 🩵" },
+  { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
   { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
