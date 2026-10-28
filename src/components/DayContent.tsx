@@ -543,7 +543,7 @@ function SurpriseRoulette() {
   };
 
   const spin = () => {
-    if (spinning || (!testMode && spins.length >= 2) || selected !== null) return;
+    if (spinning || (!testMode && spins.length >= 2) || (!testMode && selected !== null)) return;
     setSpinning(true);
     const available = testMode ? roulettePrizes.map((_, i) => i) : roulettePrizes.map((_, i) => i).filter(i => !spins.includes(i));
     const result = available[Math.floor(Math.random() * available.length)];
@@ -554,7 +554,13 @@ function SurpriseRoulette() {
       const next = [...spins, result];
       setSpins(next);
       setSpinning(false);
-      persist(next, null, false);
+      if (testMode) {
+        setSelected(result);
+        setShowPrize(true);
+        persist(next, result, true);
+      } else {
+        persist(next, null, false);
+      }
     }, 4200);
   };
 
@@ -598,13 +604,13 @@ function SurpriseRoulette() {
       </div>
 
       {spins.length > 0 && <div className="grid gap-3 sm:grid-cols-2">
-        {spins.map((index, i) => <div key={index} className="rounded-2xl border p-3 text-center" style={{ borderColor: roulettePrizes[index].color, backgroundColor: roulettePrizes[index].color + "22" }}>
+        {spins.map((index, i) => <div key={`${index}-${i}`} className="rounded-2xl border p-3 text-center" style={{ borderColor: roulettePrizes[index].color, backgroundColor: roulettePrizes[index].color + "22" }}>
           <p className="text-xs uppercase tracking-wider text-muted-foreground">Opción {i + 1}</p>
           <p className="mt-1 font-semibold">{roulettePrizes[index].icon} {roulettePrizes[index].label}</p>
         </div>)}
       </div>}
 
-      {(testMode ? spins.length >= 2 : spins.length === 2) && selected === null && <div className="space-y-3 rounded-3xl bg-secondary/60 p-4 text-center animate-in fade-in">
+      {!testMode && spins.length === 2 && selected === null && <div className="space-y-3 rounded-3xl bg-secondary/60 p-4 text-center animate-in fade-in">
         <h3 className="font-serif text-xl">Ahora eliges tú, Lucía 🩵</h3>
         <p className="text-sm text-muted-foreground">Solo puedes abrir una. Piensa bien cuál te hace más ilusión.</p>
         <div className="grid gap-3 sm:grid-cols-2">
