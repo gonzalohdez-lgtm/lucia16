@@ -543,37 +543,34 @@ function SurpriseRoulette() {
   };
 
   const spin = () => {
-    if (spinning) return;
-    setSpinning(true);
+    if (spinning || spins.length >= 2) return;
     const available = roulettePrizes.map((_, i) => i);
     const result = available[Math.floor(Math.random() * available.length)];
+    const next = [...spins, result];
+    // Guardar el giro inmediatamente para que recargar durante la animación no lo permita repetir.
+    setSpins(next);
+    setSelected(result);
+    setShowPrize(false);
+    persist(next, result, false);
+    setSpinning(true);
     const segment = 360 / roulettePrizes.length;
     const target = rotation + 360 * 5 + (360 - (result * segment + segment / 2));
     setRotation(target);
     window.setTimeout(() => {
-      const next = [...spins, result];
-      setSpins(next);
       setSpinning(false);
-      setSelected(result);
       setShowPrize(true);
       persist(next, result, true);
     }, 4200);
   };
 
-  const choose = (index: number) => {
-    if (selected !== null || (!testMode && spins.length !== 2) || spins.length < 2) return;
-    setSelected(index);
-    setShowPrize(true);
-    persist(spins, index, true);
-  };
 
   const prize = selected === null ? null : roulettePrizes[selected];
 
   return (
     <div className="mx-auto max-w-xl space-y-5">
       <div className="rounded-3xl border border-pink-200/70 bg-gradient-to-br from-rose-50 via-white to-sky-50 p-4 sm:p-6">
-        <p className="text-center text-sm font-medium text-rose-500">GIROS ILIMITADOS · ¡PRUEBA TU SUERTE! 🩵</p>
-        <p className="mx-auto mt-2 max-w-md text-center text-sm text-slate-600">Gira la ruleta todas las veces que quieras. ¡Los premios pueden repetirse y cada giro revela una sorpresa nueva! 🎁</p>
+        <p className="text-center text-sm font-medium text-rose-500">SOLO 2 GIROS · ELIGE BIEN 🩵</p>
+        <p className="mx-auto mt-2 max-w-md text-center text-sm text-slate-600">Solo tienes dos oportunidades. Aunque recargues la página, no podrás volver a girar cuando las hayas gastado. 🎁</p>
         <div className="relative mx-auto mt-6 aspect-square w-full max-w-[340px]">
           <div className="absolute -top-2 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow">▼</div>
           <div className="absolute inset-0 rounded-full border-[7px] border-white shadow-xl transition-transform duration-[4200ms] ease-[cubic-bezier(0.12,0.75,0.08,1)]"
@@ -591,10 +588,10 @@ function SurpriseRoulette() {
           </div>)}
         </div>
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-600">Tiradas realizadas: <strong>{spins.length} · sin límite</strong></p>
-          <button type="button" onClick={spin} disabled={spinning}
+          <p className="text-sm text-slate-600">Tiradas realizadas: <strong>{spins.length}/2</strong></p>
+          <button type="button" onClick={spin} disabled={spinning || spins.length >= 2}
             className="mt-3 rounded-full bg-rose-500 px-7 py-3 font-semibold text-white shadow-lg transition hover:scale-105 hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50">
-            {spinning ? "Girando… ✨" : "GIRAR LA RULETA 🎡"}
+            {spinning ? "Girando… ✨" : spins.length >= 2 ? "HAS GASTADO TUS 2 GIROS 🔒" : "GIRAR LA RULETA 🎡"}
           </button>
         </div>
       </div>
@@ -618,7 +615,7 @@ function SurpriseRoulette() {
           {prize.id === "secret" && <p className="rounded-2xl bg-emerald-50 p-5 text-center text-2xl font-semibold text-slate-700">Me pones 🩵</p>}
           {prize.id === "karts" && <div className="rounded-2xl bg-orange-50 p-5 text-center"><p className="text-4xl">🏎️</p><p className="mt-2 text-lg font-semibold text-slate-700">Vale por una actividad juntos</p><p className="mt-1 text-slate-600">¡Nos vamos a los karts! 🏁</p></div>}
         </div>
-        <p className="mt-5 text-sm text-muted-foreground">¡Puedes seguir girando para descubrir más sorpresas! 🤭🩵</p>
+        <p className="mt-5 text-sm text-muted-foreground">{spins.length >= 2 ? "¡Has descubierto tus dos sorpresas! Ya no quedan más giros 🤭🩵" : "Te queda una oportunidad para descubrir otra sorpresa 🤭🩵"}</p>
       </div>}
     </div>
   );
