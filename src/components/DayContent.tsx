@@ -519,7 +519,7 @@ const roulettePrizes = [
 
 function SurpriseRoulette() {
   const testMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("ruleta-test") === "1";
-  const storageKey = testMode ? "lucia-roulette-test-v3" : "lucia-roulette-v3";
+  const storageKey = testMode ? "lucia-roulette-test-v4" : "lucia-roulette-v4";
   const [spins, setSpins] = useState<number[]>([]);
   const [finalChoice, setFinalChoice] = useState<number | null>(null);
   const [spinning, setSpinning] = useState(false);
@@ -592,7 +592,7 @@ function SurpriseRoulette() {
             <p className="text-xs uppercase tracking-wider text-slate-600">Opción {i + 1}</p>
             {finalChoice === null ? <div className="mt-2 flex min-h-16 flex-col items-center justify-center gap-1"><span className="text-3xl">🎁</span><p className="font-semibold">Sorpresa cerrada</p><p className="text-xs text-slate-600">Termina las dos tiradas para elegir</p></div> : <div className="mt-2 flex min-h-16 flex-col items-center justify-center gap-1"><span className="text-3xl">{discarded ? "❌" : p.icon}</span><p className={`font-semibold ${discarded ? "line-through" : ""}`}>{discarded ? "Opción descartada" : chosen ? p.label : "Sorpresa cerrada"}</p>{chosen && <p className="text-xs text-slate-600">¡Has elegido esta! 🩵</p>}</div>}
             {spins.length === 2 && finalChoice === null && <button type="button" onClick={() => choose(index)} disabled={spinning} className="mt-3 w-full rounded-full bg-rose-500 px-4 py-2 font-semibold text-white transition hover:bg-rose-600 disabled:opacity-50">Elegir opción {i + 1} 🩵</button>}
-          </div>;
+          </div>
         })}
       </div>}
 
