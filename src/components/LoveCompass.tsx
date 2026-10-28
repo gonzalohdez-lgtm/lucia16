@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 type Destination = { lat: number; lon: number };
+type CompassEvent = DeviceOrientationEvent & { webkitCompassHeading?: number };
 const KEY = "lucia-compass-destination-v1";
 
 function bearingBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -26,6 +27,7 @@ export function LoveCompass() {
   const [status, setStatus] = useState("Guarda el destino y activa la brújula.");
   const [active, setActive] = useState(false);
   const watchId = useRef<number | null>(null);
+  const orientationHandler = useRef<((event: Event) => void) | null>(null);
 
   useEffect(() => {
     try {
@@ -37,7 +39,13 @@ export function LoveCompass() {
         }
       }
     } catch {}
-    return () => { if (watchId.current !== null) navigator.geolocation?.clearWatch(watchId.current); };
+    return () => {
+      if (watchId.current !== null) navigator.geolocation?.clearWatch(watchId.current);
+      if (orientationHandler.current) {
+        window.removeEventListener("deviceorientation", orientationHandler.current, true);
+        window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
+      }
+    };
   }, []);
 
   const save = () => {
@@ -54,23 +62,50 @@ export function LoveCompass() {
   const start = async () => {
     if (!destination) { setStatus("Primero guarda las coordenadas del destino."); return; }
     if (!navigator.geolocation) { setStatus("Este navegador no permite consultar la ubicación."); return; }
-    const orientation = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> };
-    if (orientation.requestPermission) {
+
+    const Orientation = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+      requestPermission?: () => Promise<"granted" | "denied">;
+    };
+    if (typeof Orientation.requestPermission === "function") {
       try {
-        if (await orientation.requestPermission() !== "granted") { setStatus("Permite el acceso a la orientación del iPhone."); return; }
-      } catch { setStatus("No se pudo activar la brújula. Comprueba los permisos de Safari."); return; }
+        const permission = await Orientation.requestPermission();
+        if (permission !== "granted") {
+          setStatus("Hace falta permitir el acceso a la orientación del iPhone. Revisa los permisos de Safari e inténtalo de nuevo.");
+          return;
+        }
+      } catch {
+        setStatus("No se pudo activar la brújula. Prueba a abrir la web directamente en Safari y permitir el movimiento/orientación.");
+        return;
+      }
+    }
+
+    if (orientationHandler.current) {
+      window.removeEventListener("deviceorientation", orientationHandler.current, true);
+      window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
     }
     const handleOrientation = (event: Event) => {
-      const e = event as DeviceOrientationEvent & { webkitCompassHeading?: number };
-      const value = typeof e.webkitCompassHeading === "number" ? e.webkitCompassHeading :
-        typeof e.alpha === "number" && e.absolute ? (360-e.alpha)%360 : null;
-      if (value !== null && Number.isFinite(value)) setHeading(value);
+      const e = event as CompassEvent;
+      // iOS Safari supplies a compass heading directly.
+      if (typeof e.webkitCompassHeading === "number" && Number.isFinite(e.webkitCompassHeading)) {
+        setHeading((e.webkitCompassHeading + 360) % 360);
+        return;
+      }
+      // Android and browsers that expose absolute device orientation.
+      if (typeof e.alpha === "number" && Number.isFinite(e.alpha)) {
+        const isAbsolute = "absolute" in e ? e.absolute : event.type === "deviceorientationabsolute";
+        if (isAbsolute) setHeading((360 - e.alpha + 360) % 360);
+      }
     };
+    orientationHandler.current = handleOrientation;
     window.addEventListener("deviceorientation", handleOrientation, true);
-    setStatus("Solicitando tu ubicación…");
+    window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+
+    setStatus("Solicitando tu ubicación y la orientación del móvil…");
+    if (watchId.current !== null) navigator.geolocation.clearWatch(watchId.current);
     watchId.current = navigator.geolocation.watchPosition(p => {
       setPosition({ lat: p.coords.latitude, lon: p.coords.longitude });
-      setActive(true); setStatus("Brújula activa. La flecha apunta hacia Gonzalo.");
+      setActive(true);
+      setStatus("Ubicación activa. Mueve el móvil para comprobar la brújula.");
     }, e => {
       setActive(false);
       setStatus(e.code === 1 ? "Permite la ubicación en los ajustes del navegador." : "No se pudo obtener la ubicación. Comprueba el GPS e inténtalo otra vez.");
@@ -79,12 +114,18 @@ export function LoveCompass() {
 
   const stop = () => {
     if (watchId.current !== null) navigator.geolocation.clearWatch(watchId.current);
-    watchId.current = null; setActive(false);
+    watchId.current = null;
+    if (orientationHandler.current) {
+      window.removeEventListener("deviceorientation", orientationHandler.current, true);
+      window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
+      orientationHandler.current = null;
+    }
+    setActive(false);
     setStatus("Brújula pausada. Ya no se consulta tu ubicación.");
   };
   const bearing = position && destination ? bearingBetween(position.lat, position.lon, destination.lat, destination.lon) : null;
   const distance = position && destination ? distanceKm(position.lat, position.lon, destination.lat, destination.lon) : null;
-  const rotation = bearing !== null && heading !== null ? bearing-heading : bearing ?? 0;
+  const rotation = bearing !== null && heading !== null ? bearing - heading : bearing ?? 0;
 
   return <div className="mx-auto max-w-md space-y-5">
     <div className="rounded-3xl border border-white/10 bg-slate-950 p-6 text-center text-white shadow-2xl">
@@ -96,15 +137,15 @@ export function LoveCompass() {
         <span className="absolute top-5 text-xs font-bold text-cyan-200">N</span><span className="absolute right-5 text-xs font-bold text-slate-400">E</span><span className="absolute bottom-5 text-xs font-bold text-slate-400">S</span><span className="absolute left-5 text-xs font-bold text-slate-400">O</span>
         <div className="relative flex h-40 w-40 items-center justify-center rounded-full border border-cyan-200/20">
           <div className="absolute h-32 w-1 rounded-full bg-cyan-300/20"/>
-          <div className="absolute h-32 w-1 origin-center" style={{ transform: `rotate(${rotation}deg)` }}>
+          <div className="absolute h-32 w-1 origin-center transition-transform duration-150" style={{ transform: `rotate(${rotation}deg)` }}>
             <div className="absolute -top-1 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[12px] border-b-[35px] border-x-transparent border-b-cyan-200 drop-shadow-[0_0_8px_rgba(103,232,249,0.8)]"/>
             <div className="absolute top-8 left-1/2 h-16 w-[3px] -translate-x-1/2 rounded-full bg-white/30"/>
           </div><span className="z-10 text-3xl">🩵</span>
         </div>
       </div>
-      <p className="text-sm text-cyan-100">{bearing === null ? "Esperando ubicación…" : `Dirección: ${Math.round(bearing)}°`}</p>
+      <p className="text-sm text-cyan-100">{bearing === null ? "Esperando ubicación…" : `Dirección hacia el destino: ${Math.round(bearing)}°`}</p>
       <p className="mt-1 text-sm text-slate-300">{distance === null ? "" : `A ${distance < 1 ? Math.round(distance*1000)+" metros" : distance.toFixed(1)+" km"} de mí`}</p>
-      {heading === null && active && <p className="mt-2 text-xs text-amber-200">Si la flecha no gira, el navegador puede no ofrecer orientación de brújula.</p>}
+      {active && heading === null && <p className="mt-2 text-xs text-amber-200">La ubicación funciona, pero este navegador no está enviando la orientación. Abre la web en el navegador del móvil y permite el acceso a movimiento/orientación.</p>}
     </div>
     <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
       <p className="font-semibold">Destino de la brújula</p>
