@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Destination = { lat: number; lon: number };
 type CompassEvent = DeviceOrientationEvent & { webkitCompassHeading?: number };
-const KEY = "lucia-compass-destination-v1";
+const DESTINATION: Destination = { lat: 37.567933, lon: -6.101235 };
 
 function bearingBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
   const rad = (n: number) => n * Math.PI / 180;
@@ -19,26 +19,15 @@ function distanceKm(a: number, b: number, c: number, d: number) {
 }
 
 export function LoveCompass() {
-  const [destination, setDestination] = useState<Destination | null>(null);
-  const [latInput, setLatInput] = useState("");
-  const [lonInput, setLonInput] = useState("");
+  const destination = DESTINATION;
   const [position, setPosition] = useState<Destination | null>(null);
   const [heading, setHeading] = useState<number | null>(null);
-  const [status, setStatus] = useState("Guarda el destino y activa la brújula.");
+  const [status, setStatus] = useState("Pulsa activar para encontrar el camino hacia mí 🩵.");
   const [active, setActive] = useState(false);
   const watchId = useRef<number | null>(null);
   const orientationHandler = useRef<((event: Event) => void) | null>(null);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Number.isFinite(parsed.lat) && Number.isFinite(parsed.lon)) {
-          setDestination(parsed); setLatInput(String(parsed.lat)); setLonInput(String(parsed.lon));
-        }
-      }
-    } catch {}
     return () => {
       if (watchId.current !== null) navigator.geolocation?.clearWatch(watchId.current);
       if (orientationHandler.current) {
@@ -48,19 +37,7 @@ export function LoveCompass() {
     };
   }, []);
 
-  const save = () => {
-    const lat = Number(latInput), lon = Number(lonInput);
-    if (!latInput.trim() || !lonInput.trim() || !Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat)>90 || Math.abs(lon)>180) {
-      setStatus("Introduce coordenadas válidas."); return;
-    }
-    const next = { lat, lon };
-    setDestination(next);
-    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
-    setStatus("Destino guardado en este navegador. Ahora activa la brújula.");
-  };
-
   const start = async () => {
-    if (!destination) { setStatus("Primero guarda las coordenadas del destino."); return; }
     if (!navigator.geolocation) { setStatus("Este navegador no permite consultar la ubicación."); return; }
 
     const Orientation = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
@@ -143,18 +120,13 @@ export function LoveCompass() {
           </div><span className="z-10 text-3xl">🩵</span>
         </div>
       </div>
-      <p className="text-sm text-cyan-100">{bearing === null ? "Esperando ubicación…" : `Dirección hacia el destino: ${Math.round(bearing)}°`}</p>
+      <p className="text-sm text-cyan-100">{bearing === null ? "Activa la brújula para encontrarme…" : `Dirección hacia mí: ${Math.round(bearing)}°`}</p>
       <p className="mt-1 text-sm text-slate-300">{distance === null ? "" : `A ${distance < 1 ? Math.round(distance*1000)+" metros" : distance.toFixed(1)+" km"} de mí`}</p>
       {active && heading === null && <p className="mt-2 text-xs text-amber-200">La ubicación funciona, pero este navegador no está enviando la orientación. Abre la web en el navegador del móvil y permite el acceso a movimiento/orientación.</p>}
     </div>
     <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
-      <p className="font-semibold">Destino de la brújula</p>
-      <p className="text-sm text-muted-foreground">Introduce las coordenadas de la casa de Gonzalo. Se guardan solo en este navegador, no en el código de la web.</p>
-      <div className="grid grid-cols-2 gap-3">
-        <label className="text-sm">Latitud<input value={latInput} onChange={e=>setLatInput(e.target.value)} inputMode="decimal" placeholder="37.000000" className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2"/></label>
-        <label className="text-sm">Longitud<input value={lonInput} onChange={e=>setLonInput(e.target.value)} inputMode="decimal" placeholder="-6.000000" className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2"/></label>
-      </div>
-      <button type="button" onClick={save} className="pill-button pill-dark w-full">Guardar destino</button>
+      <p className="font-semibold">Encuentra el camino hacia mí 🩵</p>
+      <p className="text-sm text-muted-foreground">Tu destino ya está preparado. Solo tienes que activar la brújula y permitir el acceso a tu ubicación y a la orientación del móvil.</p>
       <button type="button" onClick={start} className="pill-button w-full">Activar brújula 🧭</button>
       {active && <button type="button" onClick={stop} className="w-full rounded-full border border-border px-4 py-2 text-sm">Pausar ubicación</button>}
       <p aria-live="polite" className="text-sm text-muted-foreground">{status}</p>
