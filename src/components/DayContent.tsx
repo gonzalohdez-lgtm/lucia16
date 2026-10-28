@@ -106,7 +106,7 @@ function SurpriseChoice() {
 function Letter21({ onLastSurprise }: { onLastSurprise: () => void }) {
   useEffect(() => {
     // Tras la falsa pantalla de error, avanzar automáticamente a la sorpresa final.
-    const timer = window.setTimeout(onLastSurprise, 5000);
+    const timer = window.setTimeout(onLastSurprise, 10000);
     return () => window.clearTimeout(timer);
   }, [onLastSurprise]);
 
@@ -118,7 +118,7 @@ function Letter21({ onLastSurprise }: { onLastSurprise: () => void }) {
         <p className="mt-5 text-base sm:text-xl">ERROR 404: NOVIO DEMASIADO ENAMORADO 🩵</p>
         <p className="mt-3 text-sm text-white/90 sm:text-base">No te preocupes, Lucía. Esto es un falso error y no le ha pasado nada a tu dispositivo.</p>
         <div className="mt-8 h-2 w-full overflow-hidden rounded-full bg-white/25">
-          <div className="h-full origin-left animate-[error-countdown_5s_linear_forwards] bg-white" />
+          <div className="h-full origin-left animate-[error-countdown_10s_linear_forwards] bg-white" />
         </div>
         <p className="mt-3 text-sm text-white/90">Reiniciando el amor… y llevándote a la última sorpresa en 5 segundos.</p>
       </div>
