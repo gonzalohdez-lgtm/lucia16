@@ -575,12 +575,17 @@ function SurpriseRoulette() {
           <div className="absolute -top-2 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow">▼</div>
           <div className="absolute inset-0 rounded-full border-[7px] border-white shadow-xl transition-transform duration-[4200ms] ease-[cubic-bezier(0.12,0.75,0.08,1)]"
             style={{ transform: `rotate(${rotation}deg)`, background: `conic-gradient(${roulettePrizes.map((p, i) => `${p.color} ${i * 60}deg ${(i + 1) * 60}deg`).join(", ")})` }}>
-            {roulettePrizes.map((p, i) => <div key={p.id} className="absolute left-1/2 top-1/2 flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center text-[10px] font-bold leading-tight text-slate-800 sm:text-xs"
-              style={{ transform: `translate(-50%, -50%) rotate(${i * 60 + 30}deg) translateY(-${Math.min(112, 33)}px) rotate(-${i * 60 + 30}deg)` }}>
-              <span className="text-xl sm:text-2xl">{p.icon}</span><span className="mt-1 max-w-[88px]">{p.label}</span>
+            {roulettePrizes.map((p, i) => <div key={p.id} className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center text-2xl sm:text-3xl"
+              style={{ transform: `translate(-50%, -50%) rotate(${i * 60 + 30}deg) translateY(-105px) rotate(-${i * 60 + 30}deg)` }}>
+              <span aria-label={p.label} title={p.label}>{p.icon}</span>
             </div>)}
           </div>
           <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-white text-2xl shadow">🩵</div>
+        </div>
+        <div className="mx-auto mt-5 grid max-w-md grid-cols-2 gap-2 sm:grid-cols-3">
+          {roulettePrizes.map((p) => <div key={p.id} className="flex min-h-12 items-center gap-2 rounded-xl border bg-white/80 px-2 py-2 text-xs font-semibold text-slate-700 sm:text-sm" style={{ borderColor: p.color }}>
+            <span className="text-lg">{p.icon}</span><span>{p.label}</span>
+          </div>)}
         </div>
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-600">Tiradas utilizadas: <strong>{spins.length}/2</strong></p>
