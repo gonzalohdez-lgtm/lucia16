@@ -519,7 +519,7 @@ const roulettePrizes = [
 
 function SurpriseRoulette() {
   const testMode = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("ruleta-test") === "1";
-  const storageKey = testMode ? "lucia-roulette-test-v5" : "lucia-roulette-v5";
+  const storageKey = testMode ? "lucia-roulette-test-v6" : "lucia-roulette-v6";
   const [spins, setSpins] = useState<number[]>([]);
   const [finalChoice, setFinalChoice] = useState<number | null>(null);
   const [spinning, setSpinning] = useState(false);
