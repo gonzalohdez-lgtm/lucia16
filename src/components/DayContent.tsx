@@ -6,6 +6,7 @@ import { PhotoDates } from "@/components/PhotoDates";
 import { CoupleQuestions } from "@/components/CoupleQuestions";
 import { FortuneCookie } from "@/components/FortuneCookie";
 import { SecretSafe } from "@/components/SecretSafe";
+import { RelationshipClock } from "@/components/RelationshipClock";
 import { photos } from "@/lib/media";
 
 const btn = "pill-button pill-dark";
@@ -44,6 +45,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "wordsearch": return <WordSearch />;
     case "fortunecookie": return <FortuneCookie message={day.message} />;
     case "safe": return <SecretSafe code={day.code} message={day.message} />;
+    case "relationshipclock": return <RelationshipClock />;
   }
 }
 
