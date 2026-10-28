@@ -20,11 +20,12 @@ export type Day =
   | { type: "wordsearch"; title: string }
   | { type: "fortunecookie"; title: string; message: string }
   | { type: "safe"; title: string; code: string; message: string }
-  | { type: "relationshipclock"; title: string };
+  | { type: "relationshipclock"; title: string }
+  | { type: "lovecompass"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -45,7 +46,7 @@ export const days: Day[] = [
   { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
   { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
-  { type: "gift", title: "Otro regalito", inside: "Una canción dedicada: la que suena en el día 21 🎶" },
+  { type: "lovecompass", title: "La brújula está apuntando a mí 🧭🩵" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
