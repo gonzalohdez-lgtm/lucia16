@@ -43,7 +43,7 @@ export const days: Day[] = [
   { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
   { type: "wordsearch", title: "Sopa de letras 🩵" },
   { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
-  { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
+  { type: "surprisechoice", title: "Elige tu sorpresa 🎁" },
   { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
   { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
@@ -52,7 +52,7 @@ export const days: Day[] = [
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
   { type: "riddle", title: "Otra adivinanza", riddle: "Lo tienes cada vez que me miras y yo cada vez que te veo. Empieza por S.", answer: "sonrisa", reward: "Exacto 😊" },
-  { type: "message", title: "Un secreto", text: "No te lo he dicho nunca, pero cuando estoy contigo se me pasa el tiempo volando." },
+  { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
   { type: "quiz", title: "Test exprés", questions: [
     { q: "¿Cuántos años vas a cumplir?", options: ["15", "16", "17"], answer: 1 },
   ], reward: "¡16! Ya casi está 🎂" },
