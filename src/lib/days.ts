@@ -8,6 +8,7 @@ export type Day =
   | { type: "photomemory"; title: string; reward: string }
   | { type: "photodates"; title: string }
   | { type: "surprisechoice"; title: string }
+  | { type: "roulette"; title: string }
   | { type: "couplequestions"; title: string }
   | { type: "gift"; title: string; inside: string }
   | { type: "racing"; title: string; url: string }
@@ -24,7 +25,7 @@ export type Day =
   | { type: "lovecompass"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
-  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", couplequestions: "💭", gift: "🎁",
+  message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭",
 };
 
@@ -42,7 +43,7 @@ export const days: Day[] = [
   { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
   { type: "wordsearch", title: "Sopa de letras 🩵" },
   { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
-  { type: "surprisechoice", title: "Elige tu sorpresa 🎁" },
+  { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
   { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
   { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
