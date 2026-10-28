@@ -104,17 +104,25 @@ function SurpriseChoice() {
 }
 
 function Letter21({ onLastSurprise }: { onLastSurprise: () => void }) {
+  useEffect(() => {
+    // Tras la falsa pantalla de error, avanzar automáticamente a la sorpresa final.
+    const timer = window.setTimeout(onLastSurprise, 5000);
+    return () => window.clearTimeout(timer);
+  }, [onLastSurprise]);
+
   return (
-    <div className="space-y-4 text-lg leading-relaxed">
-      {/* Carta del día 21: texto provisional hasta que Gonzalo la escriba */}
-      <p>Lucía,</p>
-      <p>Hoy por fin es el día. Llevas 21 días abriendo una casilla y hoy es la última.</p>
-      <p>Aquí irá la carta que te estoy escribiendo. 🩵</p>
-      <p className="signature">— Gonzalo</p>
-      <div className="pt-4 text-center">
-        <button className={btn} onClick={onLastSurprise}>Una última sorpresa ✨</button>
-        <p className="final-ps mt-3 text-sm text-muted-foreground">PD: busca bien en la sorpresa</p>
+    <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-[#0078d7] p-6 text-white animate-in fade-in duration-500">
+      <div className="w-full max-w-2xl font-mono">
+        <p className="text-6xl font-light sm:text-8xl">:(</p>
+        <h2 className="mt-8 text-2xl font-semibold sm:text-4xl">¡Vaya! Algo ha salido demasiado romántico.</h2>
+        <p className="mt-5 text-base sm:text-xl">ERROR 404: NOVIO DEMASIADO ENAMORADO 🩵</p>
+        <p className="mt-3 text-sm text-white/90 sm:text-base">No te preocupes, Lucía. Esto es un falso error y no le ha pasado nada a tu dispositivo.</p>
+        <div className="mt-8 h-2 w-full overflow-hidden rounded-full bg-white/25">
+          <div className="h-full origin-left animate-[error-countdown_5s_linear_forwards] bg-white" />
+        </div>
+        <p className="mt-3 text-sm text-white/90">Reiniciando el amor… y llevándote a la última sorpresa en 5 segundos.</p>
       </div>
+      <style>{`@keyframes error-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }`}</style>
     </div>
   );
 }
