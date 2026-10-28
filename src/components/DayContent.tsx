@@ -35,6 +35,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "photomemory": return <PhotoMemory reward={day.reward} />;
     case "photodates": return <PhotoDates />;
     case "surprisechoice": return <SurpriseChoice />;
+    case "roulette": return <SurpriseRoulette />;
     case "couplequestions": return <CoupleQuestions />;
     case "puzzle": return <JigsawPuzzle image={day.image} reward={day.reward} />;
     case "gift": return <Gift inside={day.inside} />;
@@ -504,4 +505,121 @@ function WordSearch() {
     {trail && <p className={`text-center text-sm font-medium ${trail.ok ? "text-emerald-600" : "text-red-500"}`}>{trail.ok ? "¡Palabra correcta! 🟢" : "Esa palabra no es correcta. 🔴"}</p>}
     {done && <Reward text="¡Las has encontrado todas! 🩵" />}
   </div>;
+}
+
+
+const roulettePrizes = [
+  { id: "letter", label: "Carta escrita por mí", icon: "💌", color: "#F6A6B8" },
+  { id: "video", label: "Un vídeo nuestro", icon: "🎬", color: "#8EC5FC" },
+  { id: "photo", label: "Una foto especial", icon: "📸", color: "#B8A1E3" },
+  { id: "gift", label: "Un regalo sorpresa", icon: "🎁", color: "#F6C66D" },
+  { id: "secret", label: "Un mensaje secreto", icon: "🤫", color: "#8FD6C1" },
+  { id: "karts", label: "Una actividad juntos", icon: "🏎️", color: "#F39A78" },
+];
+
+function SurpriseRoulette() {
+  const storageKey = "lucia-roulette-v1";
+  const [spins, setSpins] = useState<number[]>([]);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [spinning, setSpinning] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [showPrize, setShowPrize] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (Array.isArray(data.spins)) setSpins(data.spins);
+        if (Number.isInteger(data.selected)) setSelected(data.selected);
+        if (data.showPrize === true) setShowPrize(true);
+      }
+    } catch {}
+  }, []);
+
+  const persist = (nextSpins: number[], nextSelected: number | null, reveal: boolean) => {
+    try { window.localStorage.setItem(storageKey, JSON.stringify({ spins: nextSpins, selected: nextSelected, showPrize: reveal })); } catch {}
+  };
+
+  const spin = () => {
+    if (spinning || spins.length >= 2 || selected !== null) return;
+    setSpinning(true);
+    const available = roulettePrizes.map((_, i) => i).filter(i => !spins.includes(i));
+    const result = available[Math.floor(Math.random() * available.length)];
+    const segment = 360 / roulettePrizes.length;
+    const target = rotation + 360 * 5 + (360 - (result * segment + segment / 2));
+    setRotation(target);
+    window.setTimeout(() => {
+      const next = [...spins, result];
+      setSpins(next);
+      setSpinning(false);
+      persist(next, null, false);
+    }, 4200);
+  };
+
+  const choose = (index: number) => {
+    if (selected !== null || spins.length !== 2) return;
+    setSelected(index);
+    setShowPrize(true);
+    persist(spins, index, true);
+  };
+
+  const prize = selected === null ? null : roulettePrizes[selected];
+
+  return (
+    <div className="mx-auto max-w-xl space-y-5">
+      <div className="rounded-3xl border border-pink-200/70 bg-gradient-to-br from-rose-50 via-white to-sky-50 p-4 sm:p-6">
+        <p className="text-center text-sm font-medium text-rose-500">DOS GIROS. DOS POSIBILIDADES. UNA SOLA SORPRESA. 🩵</p>
+        <p className="mx-auto mt-2 max-w-md text-center text-sm text-slate-600">Gira la ruleta dos veces. Al final tendrás que elegir una de las dos sorpresas… y la otra quedará guardada para siempre.</p>
+        <div className="relative mx-auto mt-6 aspect-square w-full max-w-[340px]">
+          <div className="absolute -top-2 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow">▼</div>
+          <div className="absolute inset-0 rounded-full border-[7px] border-white shadow-xl transition-transform duration-[4200ms] ease-[cubic-bezier(0.12,0.75,0.08,1)]"
+            style={{ transform: `rotate(${rotation}deg)`, background: `conic-gradient(${roulettePrizes.map((p, i) => `${p.color} ${i * 60}deg ${(i + 1) * 60}deg`).join(", ")})` }}>
+            {roulettePrizes.map((p, i) => <div key={p.id} className="absolute left-1/2 top-1/2 flex w-[30%] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center text-[10px] font-bold leading-tight text-slate-800 sm:text-xs"
+              style={{ transform: `translate(-50%, -50%) rotate(${i * 60 + 30}deg) translateY(-${Math.min(112, 33)}px) rotate(-${i * 60 + 30}deg)` }}>
+              <span className="text-xl sm:text-2xl">{p.icon}</span><span className="mt-1 max-w-[88px]">{p.label}</span>
+            </div>)}
+          </div>
+          <div className="absolute left-1/2 top-1/2 z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-white text-2xl shadow">🩵</div>
+        </div>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-slate-600">Tiradas utilizadas: <strong>{spins.length}/2</strong></p>
+          <button type="button" onClick={spin} disabled={spinning || spins.length >= 2 || selected !== null}
+            className="mt-3 rounded-full bg-rose-500 px-7 py-3 font-semibold text-white shadow-lg transition hover:scale-105 hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50">
+            {spinning ? "Girando… ✨" : spins.length === 2 ? "¡Ya tienes tus dos opciones!" : `GIRAR LA RULETA ${spins.length + 1}/2 🎡`}
+          </button>
+        </div>
+      </div>
+
+      {spins.length > 0 && <div className="grid gap-3 sm:grid-cols-2">
+        {spins.map((index, i) => <div key={index} className="rounded-2xl border p-3 text-center" style={{ borderColor: roulettePrizes[index].color, backgroundColor: roulettePrizes[index].color + "22" }}>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Opción {i + 1}</p>
+          <p className="mt-1 font-semibold">{roulettePrizes[index].icon} {roulettePrizes[index].label}</p>
+        </div>)}
+      </div>}
+
+      {spins.length === 2 && selected === null && <div className="space-y-3 rounded-3xl bg-secondary/60 p-4 text-center animate-in fade-in">
+        <h3 className="font-serif text-xl">Ahora eliges tú, Lucía 🩵</h3>
+        <p className="text-sm text-muted-foreground">Solo puedes abrir una. Piensa bien cuál te hace más ilusión.</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {spins.map(index => <button key={index} onClick={() => choose(index)} className="rounded-2xl border-2 bg-background p-4 transition hover:scale-[1.02]" style={{ borderColor: roulettePrizes[index].color }}>
+            <span className="block text-3xl">{roulettePrizes[index].icon}</span><span className="mt-2 block font-semibold">{roulettePrizes[index].label}</span><span className="mt-1 block text-xs text-muted-foreground">Elegir esta sorpresa</span>
+          </button>)}
+        </div>
+      </div>}
+
+      {showPrize && prize && <div className="rounded-3xl border-2 bg-background p-5 text-center shadow-lg animate-in fade-in zoom-in" style={{ borderColor: prize.color }}>
+        <p className="text-4xl">{prize.icon}</p><h3 className="mt-2 font-serif text-2xl">{prize.label}</h3>
+        <div className="mt-4 text-left">
+          {prize.id === "letter" && <div className="rounded-2xl bg-rose-50 p-5 leading-relaxed text-slate-700">Si alguna vez te preguntas si eres importante para mí, quiero que recuerdes que sí, muchísimo. Me importan tus cosas, tus preocupaciones, tus ilusiones y hasta esos cotilleos que empiezas a contarme diciendo "no sabes lo que ha pasado". Me gusta escucharte porque me gusta conocerte cada vez más. Y aunque a veces no sepa qué responder, te prometo que estoy prestando atención. Bueno, casi siempre. Si me estás hablando mientras juego, repítemelo, por favor JAJAJA.</div>}
+          {prize.id === "video" && <div><video controls playsInline preload="metadata" className="w-full rounded-2xl" src="/media/ruleta-video.mp4">Tu navegador no puede reproducir este vídeo.</video><p className="mt-3 text-center text-sm text-muted-foreground">Este es mi video favorito, porque fue el 13 de marzo</p></div>}
+          {prize.id === "photo" && <div><img src="/media/ruleta-foto.jpeg" alt="Nuestra foto especial" className="mx-auto max-h-[520px] w-full rounded-2xl object-contain" /><p className="mt-3 text-center text-sm text-muted-foreground">Esta es mi foto favorita, porque es el día que "creíamos que cumplimos 6 meses" y la primera vez que te regalé flores</p></div>}
+          {prize.id === "gift" && <p className="rounded-2xl bg-amber-50 p-5 text-center text-lg text-slate-700">Recuérdame la próxima vez que te vea que te dé este regalo. 🎁</p>}
+          {prize.id === "secret" && <p className="rounded-2xl bg-emerald-50 p-5 text-center text-2xl font-semibold text-slate-700">Me pones 🩵</p>}
+          {prize.id === "karts" && <div className="rounded-2xl bg-orange-50 p-5 text-center"><p className="text-4xl">🏎️</p><p className="mt-2 text-lg font-semibold text-slate-700">Vale por una actividad juntos</p><p className="mt-1 text-slate-600">¡Nos vamos a los karts! 🏁</p></div>}
+        </div>
+        <p className="mt-5 text-sm text-muted-foreground">La otra sorpresa se queda cerrada… esta vez solo puedes abrir una. 🤭🩵</p>
+      </div>}
+    </div>
+  );
 }
