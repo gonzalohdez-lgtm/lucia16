@@ -596,7 +596,7 @@ function SurpriseRoulette() {
         </div>
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-600">Tiradas utilizadas: <strong>{spins.length}{testMode ? " (ilimitadas)" : "/2"}</strong></p>
-          <button type="button" onClick={spin} disabled={spinning || (!testMode && spins.length >= 2) || selected !== null}
+          <button type="button" onClick={spin} disabled={spinning || (!testMode && spins.length >= 2) || (!testMode && selected !== null)}
             className="mt-3 rounded-full bg-rose-500 px-7 py-3 font-semibold text-white shadow-lg transition hover:scale-105 hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50">
             {spinning ? "Girando… ✨" : (!testMode && spins.length === 2) ? "¡Ya tienes tus dos opciones!" : testMode ? "GIRAR LA RULETA 🎡" : `GIRAR LA RULETA ${spins.length + 1}/2 🎡`}
           </button>
