@@ -49,7 +49,111 @@ function render(day: Day, onLastSurprise: () => void) {
     case "safe": return <SecretSafe code={day.code} message={day.message} />;
     case "relationshipclock": return <RelationshipClock />;
     case "lovecompass": return <LoveCompass />;
+    case "cipher": return <CipherMission />;
   }
+}
+
+
+function CipherMission() {
+  const storageKey = "lucia-archivo-020-v1";
+  const clues = [
+    { day: "DÍA 5", title: "La palabra", hint: "La palabra secreta que encontraste", icon: "⌁" },
+    { day: "DÍA 6", title: "La fecha", hint: "La fecha que guardaste", icon: "◷" },
+    { day: "DÍA 9", title: "El número", hint: "El número que descubriste", icon: "#" },
+    { day: "DÍA 16", title: "La sorpresa", hint: "La pista escondida en la sorpresa", icon: "✧" },
+    { day: "DÍA 19", title: "El código", hint: "El código de la caja fuerte", icon: "▣" },
+  ];
+  const [values, setValues] = useState<string[]>(() => {
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) return JSON.parse(saved).values || ["", "", "", "", ""];
+    } catch {}
+    return ["", "", "", "", ""];
+  });
+  const [unlocked, setUnlocked] = useState(() => {
+    try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").unlocked === true; } catch { return false; }
+  });
+  const [error, setError] = useState(false);
+  const [started, setStarted] = useState(false);
+
+  const updateValue = (index: number, value: string) => {
+    const next = values.map((v, i) => i === index ? value : v);
+    setValues(next);
+    setError(false);
+    try { window.localStorage.setItem(storageKey, JSON.stringify({ values: next, unlocked: false })); } catch {}
+  };
+  const decrypt = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStarted(true);
+    if (values.some(v => !v.trim())) { setError(true); return; }
+    setUnlocked(true);
+    setError(false);
+    try { window.localStorage.setItem(storageKey, JSON.stringify({ values, unlocked: true })); } catch {}
+  };
+  const reset = () => {
+    setValues(["", "", "", "", ""]);
+    setUnlocked(false);
+    setError(false);
+    setStarted(false);
+    try { window.localStorage.removeItem(storageKey); } catch {}
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-[1.75rem] border border-cyan-300/20 bg-[#07111f] p-5 text-slate-100 shadow-2xl sm:p-8">
+      <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(103,232,249,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(103,232,249,.12) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+      <div className="relative">
+        <div className="flex items-center justify-between gap-3 border-b border-cyan-100/15 pb-4">
+          <div>
+            <p className="font-mono text-[10px] tracking-[.35em] text-cyan-300 sm:text-xs">L&G // ARCHIVO 020</p>
+            <h3 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">La última transmisión</h3>
+          </div>
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-cyan-300/30 bg-cyan-300/10 text-2xl">📡</div>
+        </div>
+
+        {!unlocked ? (
+          <>
+            <div className="my-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-4">
+              <p className="font-mono text-xs uppercase tracking-widest text-cyan-200">Transmisión interceptada</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">Lucía, algunas cosas de los días anteriores no estaban ahí por casualidad. Recupera los cinco fragmentos y reúnelos aquí para abrir el archivo final.</p>
+              <div className="mt-4 flex items-center gap-2">
+                {clues.map((_, i) => <span key={i} className={`h-1.5 flex-1 rounded-full ${values[i]?.trim() ? "bg-cyan-300" : "bg-slate-700"}`} />)}
+                <span className="ml-1 whitespace-nowrap font-mono text-xs text-cyan-200">{values.filter(v => v.trim()).length}/5</span>
+              </div>
+            </div>
+            <form onSubmit={decrypt} className="space-y-3">
+              {clues.map((clue, i) => (
+                <label key={clue.day} className="flex items-center gap-3 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-3 transition focus-within:border-cyan-300/60 sm:p-4">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-300/10 font-mono text-lg text-cyan-200">{clue.icon}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-mono text-[10px] tracking-[.2em] text-cyan-300">{clue.day} · {clue.title}</span>
+                    <input value={values[i]} onChange={e => updateValue(i, e.target.value)} placeholder={clue.hint} aria-label={clue.title}
+                      className="mt-1 w-full border-0 bg-transparent p-0 text-sm text-white outline-none placeholder:text-slate-500 focus:ring-0" />
+                  </span>
+                  <span className={`text-lg ${values[i]?.trim() ? "text-emerald-300" : "text-slate-600"}`}>{values[i]?.trim() ? "✓" : "·"}</span>
+                </label>
+              ))}
+              {error && <p className="rounded-xl border border-rose-400/30 bg-rose-400/10 p-3 text-sm text-rose-200">Faltan fragmentos. Completa los cinco campos para reconstruir la transmisión.</p>}
+              <button type="submit" className="mt-2 w-full rounded-2xl border border-cyan-200/40 bg-cyan-300 px-5 py-4 font-mono text-sm font-bold tracking-[.18em] text-slate-950 transition hover:bg-cyan-200 active:scale-[.99]">
+                ⟶ DESENCRIPTAR ARCHIVO
+              </button>
+              <p className="text-center font-mono text-[10px] tracking-wider text-slate-500">CONEXIÓN CIFRADA · SOLO PARA LUCÍA</p>
+            </form>
+          </>
+        ) : (
+          <div className="py-7 text-center animate-in fade-in zoom-in duration-700">
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-cyan-200/40 bg-cyan-300/10 text-4xl shadow-[0_0_60px_rgba(103,232,249,.16)]">🔓</div>
+            <p className="mt-5 font-mono text-xs tracking-[.3em] text-emerald-300">TRANSMISIÓN RESTAURADA</p>
+            <h4 className="mt-3 font-serif text-3xl leading-tight text-white sm:text-4xl">El secreto siempre fuiste tú. 🩵</h4>
+            <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-slate-300">Entre todas las personas, todos los caminos y todas las casualidades, me alegro muchísimo de que el mío se cruzara con el tuyo.</p>
+            <div className="mx-auto my-6 h-px max-w-xs bg-gradient-to-r from-transparent via-cyan-200/60 to-transparent" />
+            <p className="text-sm text-cyan-100">Este archivo solo es el principio de todo lo bonito que todavía nos queda por vivir.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-2 text-2xl" aria-label="Celebración">✦ 🩵 ✧ 💌 ✦</div>
+            <button onClick={reset} className="mt-6 rounded-full border border-slate-700 px-4 py-2 text-xs text-slate-400 transition hover:border-slate-500 hover:text-slate-200">Volver a probar</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 
