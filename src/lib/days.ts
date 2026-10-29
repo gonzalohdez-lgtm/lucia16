@@ -22,11 +22,12 @@ export type Day =
   | { type: "fortunecookie"; title: string; message: string }
   | { type: "safe"; title: string; code: string; message: string }
   | { type: "relationshipclock"; title: string }
-  | { type: "lovecompass"; title: string };
+  | { type: "lovecompass"; title: string }
+  | { type: "cipher"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -58,6 +59,6 @@ export const days: Day[] = [
   ], reward: "¡16! Ya casi está 🎂" },
   { type: "fortunecookie", title: "Galleta de la fortuna 🥠", message: "Eres lo mejor que me ha pasado" },
   { type: "safe", title: "Caja fuerte secreta 🔐", code: "1303", message: "Si hoy no tienes un buen dia, quiero que recuerdes que no tienes que poder con todo siempre. Puedes estar cansada, triste o de mal humor, que no pasa absolutamente nada. Si quieres hablar, te escucho; si necesitas distraerte, intentaré hacerte reír; y si necesitas un abrazo, te lo doy. No tengo una solución mágica para todo, pero sí muchas ganas de estar a tu lado." },
-  { type: "message", title: "Mañana es el día", text: "Mañana cumples 16.\nDuerme bien, que mañana hay sorpresa 🩵" },
+  { type: "cipher", title: "Archivo 020: La última transmisión 🔐" },
   { type: "letter", title: "Feliz cumpleaños, Lucía" },
 ];
