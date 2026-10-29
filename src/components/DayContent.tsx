@@ -34,6 +34,10 @@ function render(day: Day, onLastSurprise: () => void) {
     case "memory": return <Memory emojis={day.emojis} reward={day.reward} />;
     case "photomemory": return <PhotoMemory reward={day.reward} />;
     case "photodates": return <PhotoDates />;
+    case "cupido": return <CupidMission />;
+    case "datesim": return <DateSimulator />;
+    case "bossbattle": return <ChaosBoss />;
+    case "memorymuseum": return <MemoryMuseum />;
     case "surprisechoice": return <SurpriseChoice />;
     case "roulette": return <SurpriseRoulette />;
     case "couplequestions": return <CoupleQuestions />;
@@ -830,4 +834,70 @@ function DecryptedMessage() {
       )}
     </div>
   );
+}
+
+
+function MiniShell({ emoji, subtitle, children }: { emoji: string; subtitle: string; children: any }) {
+  return <div className="mt-4 rounded-3xl border border-pink-200/70 bg-gradient-to-br from-pink-50 via-white to-sky-50 p-5 text-slate-800 shadow-sm sm:p-7"><div className="text-center text-4xl">{emoji}</div><p className="mt-2 text-center text-sm text-rose-500">{subtitle}</p><div className="mt-5">{children}</div></div>;
+}
+
+function CupidMission() {
+  const [step, setStep] = useState(0);
+  const [found, setFound] = useState<number[]>([]);
+  const [done, setDone] = useState(false);
+  const clues = [
+    { emoji: "🧸", label: "El testigo blandito", text: "Confiesa que la persona más importante de esta historia se llama Lucía." },
+    { emoji: "🍟", label: "La prueba crujiente", text: "Alguien se ha comido las patatas. Sospechoso principal: yo. Sin comentarios." },
+    { emoji: "💌", label: "La carta secreta", text: "La pista final dice que el supuesto ladrón solo quería una excusa para darte cariño." },
+    { emoji: "🧦", label: "La huella misteriosa", text: "Una huella de calcetín lleva directamente hasta el sofá… donde probablemente estoy haciendo el tonto." },
+    { emoji: "🩵", label: "El corazón desaparecido", text: "Caso resuelto: el ladrón soy yo. Me declaro culpable de robarte sonrisas y querer estar contigo." },
+  ];
+  return <MiniShell emoji="🕵️‍♀️" subtitle="CASO 012 · Encuentra las 5 pistas para resolver el misterio">
+    {!done ? <><p className="text-center font-semibold">¿Quién ha robado los besos de esta historia?</p><div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">{clues.map((clue,i)=><button key={clue.label} onClick={()=>{if(!found.includes(i)){setFound(v=>[...v,i]);setStep(i)}}} className={`rounded-2xl border p-4 text-center transition hover:-translate-y-1 ${found.includes(i)?"border-rose-300 bg-pink-100":"border-slate-200 bg-white"}`}><span className="block text-3xl">{found.includes(i)?clue.emoji:"❔"}</span><span className="mt-2 block text-sm">{found.includes(i)?clue.label:"Pista escondida"}</span></button>)}</div>{found.length>0&&<p className="mt-4 rounded-2xl bg-white p-4 text-sm">{clues[step].text}</p>}<p className="mt-3 text-center text-sm text-slate-500">Pistas descubiertas: {found.length}/5</p>{found.length===5&&<button className={btn+" mt-4 w-full"} onClick={()=>setDone(true)}>Resolver el caso</button>}</>:<Reward text="CASO CERRADO 🔎 Culpable: yo, por quererte muchísimo y por deberte una montaña de besos. 🩵"/>}
+  </MiniShell>;
+}
+
+function DateSimulator() {
+  const [choices,setChoices] = useState<string[]>([]);
+  const [done,setDone] = useState(false);
+  const scenes = [
+    {q:"Primera decisión: ¿qué hacemos?",opts:["Cita de comida 🍔","Paseo al atardecer 🌅","Noche de pelis 🍿"]},
+    {q:"Ups… ha empezado a llover. ¿Qué hacemos?",opts:["Compartir paraguas ☔","Correr como NPCs 🏃","Declarar la lluvia culpable 😂"]},
+    {q:"Última decisión: ¿qué no puede faltar?",opts:["Risas tontas 🤭","Abrazos 🩵","Estar juntos 💗"]},
+  ];
+  const current=scenes[choices.length];
+  return <MiniShell emoji="🎮" subtitle="SIMULADOR 013 · Tres decisiones, una cita">
+    {!done&&current?<><p className="text-center text-lg font-semibold">{current.q}</p><div className="mt-4 grid gap-3">{current.opts.map(o=><button key={o} className={option} onClick={()=>{const next=[...choices,o];setChoices(next);if(next.length===3)setDone(true)}}>{o}</button>)}</div><p className="mt-4 text-center text-xs text-slate-500">ESCENA {choices.length+1}/3</p></>:<><div className="rounded-2xl bg-white p-4"><p className="font-semibold">Así sería vuestra cita:</p>{choices.map((x,i)=><p key={i} className="mt-2 text-sm">{i+1}. {x}</p>)}</div><Reward text="Final desbloqueado: da igual el plan, mi parte favorita sería estar contigo. 🩵"/><button className={btn+" mt-4 w-full"} onClick={()=>{setChoices([]);setDone(false)}}>Volver a jugar</button></>}
+  </MiniShell>;
+}
+
+function ChaosBoss() {
+  const [round,setRound] = useState(0);
+  const [hearts,setHearts] = useState(0);
+  const [won,setWon] = useState(false);
+  const tasks = [
+    {q:"El monstruo del aburrimiento aparece. ¡Carga el corazón!",opts:["💗","🍕","🧦"],correct:0},
+    {q:"El caos pregunta: «¿Qué cenamos?»",opts:["No sé 😂","Lo que tú quieras 😈","Las tres opciones a la vez"],correct:2},
+    {q:"Última prueba: elige tu poder especial.",opts:["Hacer reír 🤭","Dar abrazos 🩵","Todo lo anterior ✨"],correct:2},
+  ];
+  const t=tasks[round];
+  return <MiniShell emoji="👾" subtitle="JEFE FINAL 015 · Derrota al monstruo del aburrimiento">
+    {!won?<><div className="mb-4 flex justify-center gap-2">{[0,1,2].map(i=><span key={i} className={`text-2xl ${i<hearts?"opacity-100":"opacity-25"}`}>💗</span>)}</div><p className="text-center font-semibold">{t.q}</p><div className="mt-4 grid gap-3">{t.opts.map((o,i)=><button key={o} className={option} onClick={()=>{if(i===t.correct){const h=hearts+1;setHearts(h);if(round===2)setWon(true);else setRound(round+1)}else setHearts(h=>Math.max(0,h-1))}}>{o}</button>)}</div><p className="mt-3 text-center text-xs text-slate-500">Fase {round+1}/3 · Si fallas, vuelve a intentarlo.</p></>:<><div className="text-center text-5xl">🏆</div><Reward text="¡HAS GANADO! Rango desbloqueado: Experta oficial en aguantarme. Premio: elegir nuestro próximo plan juntos. Y sí, también te quiero muchísimo. 🩵"/><button className={btn+" mt-4 w-full"} onClick={()=>{setRound(0);setHearts(0);setWon(false)}}>Revancha</button></>}
+  </MiniShell>;
+}
+
+function MemoryMuseum() {
+  const [opened,setOpened] = useState<number[]>([]);
+  const [capsule,setCapsule] = useState<string[]>([]);
+  const [done,setDone] = useState(false);
+  const rooms = [
+    {name:"Sala de las risas",emoji:"😂",text:"Mis momentos favoritos son esos en los que nos entra la risa por cualquier tontería."},
+    {name:"Sala de los detalles",emoji:"🌷",text:"Me encantan esas pequeñas cosas tuyas que quizá tú ni siquiera notas."},
+    {name:"Sala de equipo",emoji:"🤝",text:"No hace falta tener siempre un día perfecto: me gusta que podamos escucharnos y apoyarnos."},
+    {name:"Sala del futuro",emoji:"🚀",text:"Todavía nos quedan un montón de primeras veces, planes improvisados y recuerdos por crear."},
+  ];
+  const tokens=["Un viaje juntos ✈️","Una tarde de risas 😂","Un abrazo infinito 🩵"];
+  return <MiniShell emoji="🖼️" subtitle="MUSEO 017 · Abre las salas y prepara una cápsula del tiempo">
+    {!done?<><div className="grid gap-3 sm:grid-cols-2">{rooms.map((r,i)=><button key={r.name} onClick={()=>setOpened(v=>v.includes(i)?v:[...v,i])} className={`rounded-2xl border p-4 text-left transition ${opened.includes(i)?"border-pink-300 bg-pink-100":"border-slate-200 bg-white"}`}><span className="text-2xl">{opened.includes(i)?r.emoji:"🔒"}</span><p className="mt-2 font-semibold">{r.name}</p>{opened.includes(i)&&<p className="mt-2 text-sm">{r.text}</p>}</button>)}</div>{opened.length===4&&<div className="mt-5 rounded-2xl bg-white p-4"><p className="font-semibold">Elige qué guardar en nuestra cápsula del tiempo:</p>{tokens.map(t=><label key={t} className="mt-3 flex items-center gap-2 text-sm"><input type="checkbox" checked={capsule.includes(t)} onChange={e=>setCapsule(v=>e.target.checked?[...v,t]:v.filter(x=>x!==t))}/>{t}</label>)}<button disabled={capsule.length===0} className={btn+" mt-4 w-full disabled:opacity-40"} onClick={()=>setDone(true)}>Sellar cápsula</button></div>}</>:<><div className="text-center text-5xl">✨</div><Reward text={`Cápsula sellada con: ${capsule.join(" · ")}. Ojalá podamos vivir todo esto y muchísimo más. Gracias por formar parte de mi historia, Lucía. 🩵`}/><button className={btn+" mt-4 w-full"} onClick={()=>{setOpened([]);setCapsule([]);setDone(false)}}>Visitar el museo otra vez</button></>}
+  </MiniShell>;
 }
