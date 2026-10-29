@@ -55,13 +55,13 @@ function render(day: Day, onLastSurprise: () => void) {
 
 
 function CipherMission() {
-  const storageKey = "lucia-archivo-020-v1";
+  const storageKey = "lucia-archivo-020-v2";
   const clues = [
-    { day: "DÍA 5", title: "La palabra", hint: "La palabra secreta que encontraste", icon: "⌁" },
-    { day: "DÍA 6", title: "La fecha", hint: "La fecha que guardaste", icon: "◷" },
-    { day: "DÍA 9", title: "El número", hint: "El número que descubriste", icon: "#" },
-    { day: "DÍA 16", title: "La sorpresa", hint: "La pista escondida en la sorpresa", icon: "✧" },
-    { day: "DÍA 19", title: "El código", hint: "El código de la caja fuerte", icon: "▣" },
+    { day: "DÍA 5", title: "La palabra", riddle: "Está escondida en la sopa de letras y resume lo que siento por ti. Son dos palabras juntas.", hint: "Escribe la palabra secreta", icon: "⌁", answers: ["TEAMO", "TE AMO"] },
+    { day: "DÍA 6", title: "La fecha", riddle: "Es el día y el mes en que empezamos nuestra historia. Escríbelo como día/mes.", hint: "DD/MM", icon: "◷", answers: ["13/03", "13-03", "13.03", "1303", "13 MARZO", "13 DE MARZO"] },
+    { day: "DÍA 9", title: "El número", riddle: "Es el número de la nueva vuelta al sol que estás a punto de celebrar.", hint: "Escribe el número", icon: "#", answers: ["16", "DIECISÉIS", "DIECISEIS"] },
+    { day: "DÍA 16", title: "La sorpresa", riddle: "Vuelve al día 16, mira la sorpresa que elegiste en la ruleta y escribe su nombre.", hint: "Nombre de tu sorpresa elegida", icon: "✧", answers: [] },
+    { day: "DÍA 19", title: "El código", riddle: "Abre la caja fuerte del día 19: el mismo código de cuatro cifras es la última llave.", hint: "Código de cuatro cifras", icon: "▣", answers: ["1303"] },
   ];
   const [values, setValues] = useState<string[]>(() => {
     try {
@@ -70,32 +70,67 @@ function CipherMission() {
     } catch {}
     return ["", "", "", "", ""];
   });
+  const [completed, setCompleted] = useState<number[]>(() => {
+    try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").completed || []; } catch { return []; }
+  });
+  const [active, setActive] = useState(() => {
+    try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").active || 0; } catch { return 0; }
+  });
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [unlocked, setUnlocked] = useState(() => {
     try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").unlocked === true; } catch { return false; }
   });
-  const [error, setError] = useState(false);
-  const [started, setStarted] = useState(false);
 
-  const updateValue = (index: number, value: string) => {
-    const next = values.map((v, i) => i === index ? value : v);
-    setValues(next);
-    setError(false);
-    try { window.localStorage.setItem(storageKey, JSON.stringify({ values: next, unlocked: false })); } catch {}
+  const persist = (nextValues: string[], nextCompleted: number[], nextActive: number, nextUnlocked: boolean) => {
+    try { window.localStorage.setItem(storageKey, JSON.stringify({ values: nextValues, completed: nextCompleted, active: nextActive, unlocked: nextUnlocked })); } catch {}
   };
-  const decrypt = (e: React.FormEvent) => {
+  const updateValue = (value: string) => {
+    const next = values.map((v, i) => i === active ? value : v);
+    setValues(next);
+    setFeedback(null);
+    persist(next, completed, active, false);
+  };
+  const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z0-9/]/g, "");
+  const checkAnswer = (e: React.FormEvent) => {
     e.preventDefault();
-    setStarted(true);
-    if (values.some(v => !v.trim())) { setError(true); return; }
-    setUnlocked(true);
-    setError(false);
-    try { window.localStorage.setItem(storageKey, JSON.stringify({ values, unlocked: true })); } catch {}
+    const clue = clues[active];
+    let accepted = clue.answers;
+    if (active === 3) {
+      try {
+        const roulette = JSON.parse(window.localStorage.getItem("lucia-roulette-v6") || "{}");
+        const chosen = Number.isInteger(roulette.finalChoice) ? roulette.finalChoice : null;
+        if (chosen !== null && roulettePrizes[chosen]) accepted = [roulettePrizes[chosen].label, roulettePrizes[chosen].id, roulettePrizes[chosen].icon];
+      } catch {}
+    }
+    if (!values[active].trim() || !accepted.some(answer => normalize(answer) === normalize(values[active]))) {
+      setFeedback("wrong");
+      return;
+    }
+    const nextCompleted = Array.from(new Set([...completed, active]));
+    const nextActive = active + 1;
+    const nextUnlocked = nextCompleted.length === clues.length;
+    setCompleted(nextCompleted);
+    setFeedback("correct");
+    if (nextUnlocked) {
+      setUnlocked(true);
+      persist(values, nextCompleted, active, true);
+    } else {
+      window.setTimeout(() => {
+        setActive(nextActive);
+        setFeedback(null);
+        persist(values, nextCompleted, nextActive, false);
+      }, 850);
+      persist(values, nextCompleted, active, false);
+    }
   };
   const reset = () => {
-    setValues(["", "", "", "", ""]);
+    const empty = ["", "", "", "", ""];
+    setValues(empty);
+    setCompleted([]);
+    setActive(0);
+    setFeedback(null);
     setUnlocked(false);
-    setError(false);
-    setStarted(false);
-    try { window.localStorage.removeItem(storageKey); } catch {}
+    persist(empty, [], 0, false);
   };
 
   return (
@@ -109,53 +144,50 @@ function CipherMission() {
           </div>
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-cyan-300/30 bg-cyan-300/10 text-2xl">📡</div>
         </div>
-
         {!unlocked ? (
           <>
             <div className="my-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-4">
               <p className="font-mono text-xs uppercase tracking-widest text-cyan-200">Transmisión interceptada</p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-300">Lucía, algunas cosas de los días anteriores no estaban ahí por casualidad. Recupera los cinco fragmentos y reúnelos aquí para abrir el archivo final.</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">Resuelve la adivinanza de cada archivo. Si aciertas, la respuesta se marcará en verde y pasarás automáticamente al siguiente día. Si fallas, solo tendrás que repetir esa prueba.</p>
               <div className="mt-4 flex items-center gap-2">
-                {clues.map((_, i) => <span key={i} className={`h-1.5 flex-1 rounded-full ${values[i]?.trim() ? "bg-cyan-300" : "bg-slate-700"}`} />)}
-                <span className="ml-1 whitespace-nowrap font-mono text-xs text-cyan-200">{values.filter(v => v.trim()).length}/5</span>
+                {clues.map((_, i) => <span key={i} className={`h-1.5 flex-1 rounded-full ${completed.includes(i) ? "bg-emerald-400" : i === active ? "bg-cyan-300" : "bg-slate-700"}`} />)}
+                <span className="ml-1 whitespace-nowrap font-mono text-xs text-cyan-200">{completed.length}/5</span>
               </div>
             </div>
-            <form onSubmit={decrypt} className="space-y-3">
-              {clues.map((clue, i) => (
-                <label key={clue.day} className="flex items-center gap-3 rounded-2xl border border-slate-700/80 bg-slate-900/70 p-3 transition focus-within:border-cyan-300/60 sm:p-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-300/10 font-mono text-lg text-cyan-200">{clue.icon}</span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-mono text-[10px] tracking-[.2em] text-cyan-300">{clue.day} · {clue.title}</span>
-                    <input value={values[i]} onChange={e => updateValue(i, e.target.value)} placeholder={clue.hint} aria-label={clue.title}
-                      className="mt-1 w-full border-0 bg-transparent p-0 text-sm text-white outline-none placeholder:text-slate-500 focus:ring-0" />
-                  </span>
-                  <span className={`text-lg ${values[i]?.trim() ? "text-emerald-300" : "text-slate-600"}`}>{values[i]?.trim() ? "✓" : "·"}</span>
+            <div className="mb-3 flex gap-2">
+              {clues.map((clue, i) => <div key={clue.day} className={`flex-1 rounded-xl border px-1 py-2 text-center text-[10px] sm:text-xs ${completed.includes(i) ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-300" : i === active ? "border-cyan-300/50 bg-cyan-300/10 text-cyan-100" : "border-slate-700 text-slate-500"}`}>{clue.day}<div className="mt-1">{completed.includes(i) ? "✓" : i === active ? "EN CURSO" : "🔒"}</div></div>)}
+            </div>
+            <form onSubmit={checkAnswer} className="space-y-4">
+              <div className={`rounded-2xl border p-4 transition ${feedback === "correct" ? "border-emerald-400 bg-emerald-400/10" : feedback === "wrong" ? "border-rose-400 bg-rose-400/10" : "border-slate-700 bg-slate-900/70"}`}>
+                <p className="font-mono text-xs tracking-[.2em] text-cyan-300">{clues[active].day} · {clues[active].title}</p>
+                <p className="mt-3 text-base leading-relaxed text-slate-100">{clues[active].riddle}</p>
+                <label className="mt-4 block">
+                  <span className="mb-2 block text-xs text-slate-400">TU RESPUESTA</span>
+                  <input autoFocus key={active} value={values[active]} onChange={e => updateValue(e.target.value)} placeholder={clues[active].hint} aria-label={clues[active].title}
+                    className={`w-full rounded-xl border bg-slate-950/80 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:ring-2 ${feedback === "wrong" ? "border-rose-400 focus:ring-rose-400/30" : feedback === "correct" ? "border-emerald-400 focus:ring-emerald-400/30" : "border-slate-700 focus:border-cyan-300 focus:ring-cyan-300/20"}`} />
                 </label>
-              ))}
-              {error && <p className="rounded-xl border border-rose-400/30 bg-rose-400/10 p-3 text-sm text-rose-200">Faltan fragmentos. Completa los cinco campos para reconstruir la transmisión.</p>}
-              <button type="submit" className="mt-2 w-full rounded-2xl border border-cyan-200/40 bg-cyan-300 px-5 py-4 font-mono text-sm font-bold tracking-[.18em] text-slate-950 transition hover:bg-cyan-200 active:scale-[.99]">
-                ⟶ DESENCRIPTAR ARCHIVO
-              </button>
+                {feedback === "wrong" && <p className="mt-3 text-sm font-semibold text-rose-300">✕ No es esa. Prueba otra vez: solo tienes que repetir esta adivinanza.</p>}
+                {feedback === "correct" && <p className="mt-3 text-sm font-semibold text-emerald-300">✓ ¡Correcto! Abriendo el siguiente archivo…</p>}
+              </div>
+              <button type="submit" disabled={feedback === "correct"} className={`w-full rounded-2xl px-5 py-4 font-mono text-sm font-bold tracking-[.12em] transition active:scale-[.99] disabled:opacity-70 ${feedback === "wrong" ? "bg-rose-500 text-white hover:bg-rose-400" : "bg-cyan-300 text-slate-950 hover:bg-cyan-200"}`}>{feedback === "wrong" ? "REINTENTAR ESTA ADIVINANZA" : "COMPROBAR RESPUESTA ⟶"}</button>
               <p className="text-center font-mono text-[10px] tracking-wider text-slate-500">CONEXIÓN CIFRADA · SOLO PARA LUCÍA</p>
             </form>
           </>
         ) : (
           <div className="py-7 text-center animate-in fade-in zoom-in duration-700">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-cyan-200/40 bg-cyan-300/10 text-4xl shadow-[0_0_60px_rgba(103,232,249,.16)]">🔓</div>
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-emerald-300/40 bg-emerald-300/10 text-4xl shadow-[0_0_60px_rgba(110,231,183,.16)]">🔓</div>
             <p className="mt-5 font-mono text-xs tracking-[.3em] text-emerald-300">TRANSMISIÓN RESTAURADA</p>
             <h4 className="mt-3 font-serif text-3xl leading-tight text-white sm:text-4xl">El secreto siempre fuiste tú. 🩵</h4>
             <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-slate-300">Entre todas las personas, todos los caminos y todas las casualidades, me alegro muchísimo de que el mío se cruzara con el tuyo.</p>
             <div className="mx-auto my-6 h-px max-w-xs bg-gradient-to-r from-transparent via-cyan-200/60 to-transparent" />
             <p className="text-sm text-cyan-100">Este archivo solo es el principio de todo lo bonito que todavía nos queda por vivir.</p>
-            <div className="mt-6 flex flex-wrap justify-center gap-2 text-2xl" aria-label="Celebración">✦ 🩵 ✧ 💌 ✦</div>
-            <button onClick={reset} className="mt-6 rounded-full border border-slate-700 px-4 py-2 text-xs text-slate-400 transition hover:border-slate-500 hover:text-slate-200">Volver a probar</button>
+            <button type="button" onClick={reset} className="mt-6 rounded-full border border-cyan-200/30 px-4 py-2 text-xs text-cyan-100 hover:bg-cyan-300/10">Volver a probar</button>
           </div>
         )}
       </div>
     </div>
   );
 }
-
 
 function SurpriseChoice() {
   const storageKey = "lucia-day7-surprise-choice";
