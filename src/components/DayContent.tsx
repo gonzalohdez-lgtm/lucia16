@@ -174,15 +174,7 @@ function CipherMission() {
             </form>
           </>
         ) : (
-          <div className="py-7 text-center animate-in fade-in zoom-in duration-700">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-emerald-300/40 bg-emerald-300/10 text-4xl shadow-[0_0_60px_rgba(110,231,183,.16)]">🔓</div>
-            <p className="mt-5 font-mono text-xs tracking-[.3em] text-emerald-300">TRANSMISIÓN RESTAURADA</p>
-            <h4 className="mt-3 font-serif text-3xl leading-tight text-white sm:text-4xl">El secreto siempre fuiste tú. 🩵</h4>
-            <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-slate-300">Entre todas las personas, todos los caminos y todas las casualidades, me alegro muchísimo de que el mío se cruzara con el tuyo.</p>
-            <div className="mx-auto my-6 h-px max-w-xs bg-gradient-to-r from-transparent via-cyan-200/60 to-transparent" />
-            <p className="text-sm text-cyan-100">Este archivo solo es el principio de todo lo bonito que todavía nos queda por vivir.</p>
-            <button type="button" onClick={reset} className="mt-6 rounded-full border border-cyan-200/30 px-4 py-2 text-xs text-cyan-100 hover:bg-cyan-300/10">Volver a probar</button>
-          </div>
+          <DecryptedMessage />
         )}
       </div>
     </div>
@@ -745,6 +737,94 @@ function SurpriseRoulette() {
         </div>
         <p className="mt-5 text-sm text-muted-foreground">Esta es la única sorpresa que has elegido. La otra opción queda descartada para siempre 🤭🩵</p>
       </div>}
+    </div>
+  );
+}
+
+
+function DecryptedMessage() {
+  const [progress, setProgress] = useState(0);
+  const [stage, setStage] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    const messages = [
+      { at: 0, text: "Iniciando protocolo de desencriptación..." },
+      { at: 18, text: "Buscando clave de acceso..." },
+      { at: 38, text: "Identidad verificada ✓" },
+      { at: 61, text: "Descifrando archivo personal..." },
+      { at: 82, text: "Acceso concedido ✓" },
+      { at: 100, text: "MENSAJE DESENCRIPTADO" },
+    ];
+    const started = Date.now();
+    const duration = 5200;
+    const timer = window.setInterval(() => {
+      const next = Math.min(100, Math.round(((Date.now() - started) / duration) * 100));
+      setProgress(next);
+      const currentStage = messages.reduce((found, item, i) => next >= item.at ? i : found, 0);
+      setStage(currentStage);
+      if (next >= 100) {
+        window.clearInterval(timer);
+        window.setTimeout(() => setShowMessage(true), 700);
+      }
+    }, 70);
+    // Small computer-style beeps; audio starts only after the user's click to check the final answer.
+    try {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        const audio = new AudioContextClass();
+        [0, 0.45, 1.1, 1.85, 2.65, 3.55, 4.45].forEach((delay, i) => {
+          window.setTimeout(() => {
+            const oscillator = audio.createOscillator();
+            const gain = audio.createGain();
+            oscillator.type = "square";
+            oscillator.frequency.value = i === 6 ? 880 : 440 + (i % 3) * 110;
+            gain.gain.value = 0.025;
+            oscillator.connect(gain);
+            gain.connect(audio.destination);
+            oscillator.start();
+            oscillator.stop(audio.currentTime + 0.07);
+          }, delay * 1000);
+        });
+        window.setTimeout(() => audio.close(), 6000);
+      }
+    } catch {}
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const statusMessages = [
+    "Iniciando protocolo de desencriptación...",
+    "Buscando clave de acceso...",
+    "Identidad verificada ✓",
+    "Descifrando archivo personal...",
+    "Acceso concedido ✓",
+    "MENSAJE DESENCRIPTADO",
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[200] flex min-h-screen items-center justify-center overflow-y-auto bg-black p-5 text-cyan-100">
+      <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.14) 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      {!showMessage ? (
+        <div className="relative w-full max-w-xl font-mono">
+          <p className="text-center text-xs tracking-[.35em] text-cyan-400">L&G // SECURE SYSTEM</p>
+          <div className="my-8 text-center text-5xl sm:text-7xl">⌁</div>
+          <h3 className="text-center text-xl font-bold tracking-[.18em] sm:text-2xl">DESENCRIPTANDO ARCHIVO 020</h3>
+          <p className="mt-5 min-h-6 text-center text-sm text-emerald-300">{statusMessages[stage]}</p>
+          <div className="mt-6 h-3 overflow-hidden rounded-full border border-cyan-300/40 bg-slate-900">
+            <div className="h-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,.9)] transition-[width] duration-100" style={{ width: progress + "%" }} />
+          </div>
+          <div className="mt-2 flex justify-between text-xs text-cyan-400"><span>PROCESANDO</span><span>{progress}%</span></div>
+          <p className="mt-10 text-center text-[10px] tracking-widest text-slate-500">NO CIERRES ESTA VENTANA · CONEXIÓN SEGURA</p>
+        </div>
+      ) : (
+        <div className="relative w-full max-w-2xl animate-in fade-in zoom-in duration-700">
+          <p className="text-center font-mono text-xs tracking-[.35em] text-emerald-300">✓ ACCESO CONCEDIDO · ARCHIVO DESENCRIPTADO</p>
+          <div className="mt-6 rounded-3xl border border-cyan-300/30 bg-slate-950/90 p-6 shadow-[0_0_70px_rgba(34,211,238,.12)] sm:p-10">
+            <div className="mb-6 text-center text-4xl">🩵</div>
+            <p className="whitespace-pre-line text-lg leading-relaxed text-slate-100 sm:text-xl">Ya estamos casi llegando al final del calendario y espero que te haya gustado abrir estos jueguecitos. Quería hacerte algo diferente, algo que pudieras guardar y releer cuando te apeteciera. Porque a veces un "te quiero" por WhatsApp se queda corto para todo lo que quiero decirte. Así que aquí tienes la prueba escrita de lo romántico que puedo llegar a ser y todo lo que significas para miii. 🩵</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
