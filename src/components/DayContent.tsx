@@ -804,6 +804,9 @@ function DecryptedMessage() {
   return (
     <div className="fixed inset-0 z-[200] flex min-h-screen items-center justify-center overflow-y-auto bg-black p-5 text-cyan-100">
       <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(34,211,238,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.14) 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      <button type="button" onClick={() => { window.location.href = "/"; }} className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-slate-950/80 px-4 py-2 font-mono text-xs text-cyan-100 transition hover:bg-cyan-300/10 sm:left-6 sm:top-6">
+        <span aria-hidden="true">←</span> VOLVER AL CALENDARIO
+      </button>
       {!showMessage ? (
         <div className="relative w-full max-w-xl font-mono">
           <p className="text-center text-xs tracking-[.35em] text-cyan-400">L&G // SECURE SYSTEM</p>
