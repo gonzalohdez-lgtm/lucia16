@@ -23,11 +23,15 @@ export type Day =
   | { type: "safe"; title: string; code: string; message: string }
   | { type: "relationshipclock"; title: string }
   | { type: "lovecompass"; title: string }
-  | { type: "cipher"; title: string };
+  | { type: "cipher"; title: string }
+  | { type: "cupido"; title: string }
+  | { type: "datesim"; title: string }
+  | { type: "bossbattle"; title: string }
+  | { type: "memorymuseum"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -43,12 +47,12 @@ export const days: Day[] = [
   ], reward: "¡Perfecta! Me conoces mejor que nadie 🩵" },
   { type: "racing", title: "Lucía ♥ Gonzalo Racing", url: "https://luygof1.lovable.app" },
   { type: "wordsearch", title: "Sopa de letras 🩵" },
-  { type: "photodates", title: "Une nuestros recuerdos con sus fechas 📸" },
-  { type: "surprisechoice", title: "Elige tu sorpresa 🎁" },
+  { type: "cupido", title: "Operación: Cupido infiltrado 🕵️‍♂️" },
+  { type: "datesim", title: "El simulador de nuestra cita 🎮" },
   { type: "couplequestions", title: "Hablemos de nuestro futuro 💗" },
-  { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
+  { type: "bossbattle", title: "Jefe final: el caos 💥" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
-  { type: "lovecompass", title: "La brújula está apuntando a mí 🧭🩵" },
+  { type: "memorymuseum", title: "El museo de las cosas que no se ven 🖼️" },
   { type: "message", title: "Ya queda menos", text: "Faltan 9 días.\nY yo cada día más ganas de verte sonreír." },
   { type: "coupon", title: "Cupón de mimos", coupon: "Vale por una tarde de mimos", detail: "Canjeable sin fecha de caducidad." },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
