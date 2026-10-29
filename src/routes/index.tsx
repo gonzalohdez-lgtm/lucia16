@@ -24,6 +24,7 @@ export const Route = createFileRoute("/")({
 function Advent() {
   const [selected, setSelected] = useState<number | null>(null);
   const [river, setRiver] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const [preview, setPreview] = useState(false);
   const [askFor, setAskFor] = useState<number | null>(null);
   const [pass, setPass] = useState("");
@@ -52,7 +53,9 @@ function Advent() {
   };
 
   return (
-    <main className="min-h-screen bg-background px-5 py-14 text-foreground">
+    <main className="relative min-h-screen bg-background px-5 py-14 text-foreground">
+      <button type="button" onClick={() => setNoteOpen(v => !v)} aria-expanded={noteOpen} className="fixed right-4 top-4 z-40 rounded-bl-2xl rounded-br-2xl rounded-tl-2xl border border-pink-200 bg-pink-100 px-4 py-3 text-sm font-medium text-rose-700 shadow-md transition hover:-translate-y-0.5 hover:bg-pink-200 sm:right-6 sm:top-6">💌 Nota secreta</button>
+      {noteOpen && <div role="status" className="fixed right-4 top-16 z-40 w-[min(300px,calc(100vw-2rem))] rounded-2xl border border-pink-200 bg-white p-5 text-center text-rose-700 shadow-xl sm:right-6 sm:top-20"><button type="button" aria-label="Cerrar nota" onClick={() => setNoteOpen(false)} className="absolute right-3 top-2 text-lg text-rose-400 hover:text-rose-700">×</button><p className="pt-2 font-serif text-xl">pd: te quiero muchisimo 🩵</p></div>}
       <div className="mx-auto max-w-4xl">
         <p className="eyebrow text-muted-foreground">21 · 12 · 2026</p>
         <h1 className="mt-3 font-serif text-4xl md:text-6xl">Tienes que entrar aquí 1 vez al día hasta el día 21 de diciembre</h1>
