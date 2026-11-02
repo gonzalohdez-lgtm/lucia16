@@ -26,6 +26,7 @@ export function LoveCompass() {
   const [active, setActive] = useState(false);
   const watchId = useRef<number | null>(null);
   const orientationHandler = useRef<((event: Event) => void) | null>(null);
+  const orientationTimeout = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
@@ -34,6 +35,7 @@ export function LoveCompass() {
         window.removeEventListener("deviceorientation", orientationHandler.current, true);
         window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
       }
+      if (orientationTimeout.current !== null) window.clearTimeout(orientationTimeout.current);
     };
   }, []);
 
@@ -60,22 +62,33 @@ export function LoveCompass() {
       window.removeEventListener("deviceorientation", orientationHandler.current, true);
       window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
     }
+    if (orientationTimeout.current !== null) window.clearTimeout(orientationTimeout.current);
+    setHeading(null);
     const handleOrientation = (event: Event) => {
       const e = event as CompassEvent;
-      // iOS Safari supplies a compass heading directly.
+      // Safari on iPhone provides the compass heading in webkitCompassHeading.
       if (typeof e.webkitCompassHeading === "number" && Number.isFinite(e.webkitCompassHeading)) {
         setHeading((e.webkitCompassHeading + 360) % 360);
         return;
       }
-      // Android and browsers that expose absolute device orientation.
+      // Other browsers: use alpha only when the event is explicitly absolute.
       if (typeof e.alpha === "number" && Number.isFinite(e.alpha)) {
-        const isAbsolute = "absolute" in e ? e.absolute : event.type === "deviceorientationabsolute";
+        const isAbsolute = ("absolute" in e && e.absolute === true) || event.type === "deviceorientationabsolute";
         if (isAbsolute) setHeading((360 - e.alpha + 360) % 360);
       }
     };
     orientationHandler.current = handleOrientation;
     window.addEventListener("deviceorientation", handleOrientation, true);
     window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+    // Some browsers grant permission but never emit orientation events.
+    orientationTimeout.current = window.setTimeout(() => {
+      setHeading(current => {
+        if (current === null) {
+          setStatus("La ubicación puede funcionar, pero no llegan datos de la brújula. En iPhone, abre la web en Safari (no desde una app), revisa Ajustes > Safari > Movimiento y orientación y vuelve a tocar Activar brújula.");
+        }
+        return current;
+      });
+    }, 5000);
 
     setStatus("Solicitando tu ubicación y la orientación del móvil…");
     if (watchId.current !== null) navigator.geolocation.clearWatch(watchId.current);
@@ -97,6 +110,11 @@ export function LoveCompass() {
       window.removeEventListener("deviceorientationabsolute", orientationHandler.current, true);
       orientationHandler.current = null;
     }
+    if (orientationTimeout.current !== null) {
+      window.clearTimeout(orientationTimeout.current);
+      orientationTimeout.current = null;
+    }
+    setHeading(null);
     setActive(false);
     setStatus("Brújula pausada. Ya no se consulta tu ubicación.");
   };
