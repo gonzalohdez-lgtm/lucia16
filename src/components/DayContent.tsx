@@ -37,6 +37,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "cupido": return <CupidMission />;
     case "datesim": return <DateSimulator />;
     case "bossbattle": return <ChaosBoss />;
+    case "stickeralbum": return <StickerAlbum />;
     case "memorymuseum": return <MemoryMuseum />;
     case "surprisechoice": return <SurpriseChoice />;
     case "roulette": return <SurpriseRoulette />;
@@ -57,6 +58,57 @@ function render(day: Day, onLastSurprise: () => void) {
   }
 }
 
+
+
+function StickerAlbum() {
+  const storageKey = "lucia-sticker-album-v1";
+  const stickerIds = Array.from({ length: 15 }, (_, i) => i + 1);
+  const [openedPacks, setOpenedPacks] = useState<number[]>(() => { try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").openedPacks || []; } catch { return []; } });
+  const [placed, setPlaced] = useState<Record<string, number>>(() => { try { return JSON.parse(window.localStorage.getItem(storageKey) || "{}").placed || {}; } catch { return {}; } });
+  const [page, setPage] = useState(1);
+  const [activeSlot, setActiveSlot] = useState<number | null>(null);
+  const [revealingPack, setRevealingPack] = useState<number | null>(null);
+  const [latestPack, setLatestPack] = useState<number | null>(null);
+  const acquired = openedPacks.flatMap(pack => [pack * 3 - 2, pack * 3 - 1, pack * 3]);
+  const placedIds = Object.values(placed);
+  const available = acquired.filter(id => !placedIds.includes(id));
+  const persist = (nextPacks: number[], nextPlaced: Record<string, number>) => { try { window.localStorage.setItem(storageKey, JSON.stringify({ openedPacks: nextPacks, placed: nextPlaced })); } catch {} };
+  const openPack = (pack: number) => {
+    if (openedPacks.includes(pack) || revealingPack !== null) return;
+    setRevealingPack(pack);
+    window.setTimeout(() => { const next = [...openedPacks, pack]; setOpenedPacks(next); setLatestPack(pack); setRevealingPack(null); persist(next, placed); }, 850);
+  };
+  const chooseSticker = (id: number) => {
+    if (activeSlot === null || placedIds.includes(id)) return;
+    const next = { ...placed, [String(activeSlot)]: id };
+    setPlaced(next); persist(openedPacks, next); setActiveSlot(null);
+  };
+  const stickerAt = (slot: number) => placed[String(slot)];
+  const totalPlaced = Object.keys(placed).length;
+  return <div className="mt-4 space-y-5">
+    <div className="overflow-hidden rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 via-white to-pink-50 p-4 text-slate-800 shadow-sm sm:p-6">
+      <div className="flex items-center justify-between gap-3"><div><p className="text-xs font-bold tracking-[.22em] text-sky-600">COLECCIÓN L&G · 2026</p><h3 className="mt-1 text-2xl font-black">Nuestro álbum de cromos</h3><p className="mt-1 text-sm text-slate-500">15 cromos · 5 sobres · 5 páginas</p></div><div className="text-4xl">🏆</div></div>
+      <div className="mt-4 flex items-center justify-between text-sm font-semibold"><span>Álbum completado</span><span>{totalPlaced}/15</span></div>
+      <div className="mt-2 h-3 overflow-hidden rounded-full bg-sky-100"><div className="h-full rounded-full bg-gradient-to-r from-sky-400 to-pink-400 transition-all duration-500" style={{ width: (totalPlaced / 15 * 100) + "%" }} /></div>
+    </div>
+    <section className="rounded-3xl border border-pink-200 bg-white p-4 shadow-sm sm:p-5">
+      <div className="flex items-center justify-between"><div><h3 className="text-lg font-bold text-slate-800">📦 Sobres</h3><p className="text-xs text-slate-500">Abre los cinco para descubrir los cromos</p></div><span className="rounded-full bg-pink-50 px-3 py-1 text-xs font-bold text-pink-600">{openedPacks.length}/5 abiertos</span></div>
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">{[1,2,3,4,5].map(pack => <button key={pack} type="button" disabled={openedPacks.includes(pack) || revealingPack !== null} onClick={() => openPack(pack)} className={"group relative overflow-hidden rounded-2xl border-2 p-3 text-center transition hover:-translate-y-1 disabled:cursor-default " + (openedPacks.includes(pack) ? "border-emerald-200 bg-emerald-50" : revealingPack === pack ? "border-pink-400 bg-pink-100 animate-pulse" : "border-sky-200 bg-gradient-to-br from-sky-100 to-pink-100 hover:border-pink-300")}><span className="block text-4xl transition-transform group-hover:scale-110">{openedPacks.includes(pack) ? "✂️" : revealingPack === pack ? "💥" : "💌"}</span><span className="mt-2 block text-sm font-bold text-slate-700">Sobre {pack}</span><span className="mt-1 block text-[11px] text-slate-500">{openedPacks.includes(pack) ? "Abierto ✓" : revealingPack === pack ? "¡Abriéndose!" : "3 cromos dentro"}</span></button>)}</div>
+      {latestPack !== null && <div className="mt-4 animate-in fade-in slide-in-from-bottom-3 rounded-2xl bg-pink-50 p-3"><p className="text-center text-sm font-bold text-pink-700">¡Has abierto el sobre {latestPack}! Estos tres cromos ya están disponibles para colocar:</p><div className="mt-3 grid grid-cols-3 gap-2">{[latestPack*3-2,latestPack*3-1,latestPack*3].map(id=><div key={id} className="rounded-xl border border-pink-200 bg-white p-2 text-center"><span className="text-2xl">🌟</span><p className="text-xs font-bold text-slate-700">Cromo #{String(id).padStart(2,"0")}</p></div>)}</div></div>}
+    </section>
+    <section className="rounded-3xl border border-sky-200 bg-sky-50/60 p-4 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-lg font-bold text-slate-800">🗂️ Mis cromos</h3><p className="text-xs text-slate-500">Los que tienes y los que todavía te faltan</p></div><div className="flex gap-3 text-[11px] font-semibold"><span className="text-emerald-700">● Conseguido: {acquired.length}</span><span className="text-slate-500">○ Pendiente: {15-acquired.length}</span></div></div>
+      <div className="mt-3 grid grid-cols-5 gap-2 sm:gap-3">{stickerIds.map(id=><div key={id} className={"rounded-xl border p-2 text-center " + (acquired.includes(id) ? "border-emerald-200 bg-white" : "border-dashed border-slate-300 bg-slate-100/70")}><span className="block text-xl">{acquired.includes(id) ? "🌟" : "🔒"}</span><span className="mt-1 block text-[10px] font-bold text-slate-600">#{String(id).padStart(2,"0")}</span><span className={"mt-1 block text-[9px] " + (acquired.includes(id) ? "text-emerald-700" : "text-slate-400")}>{acquired.includes(id) ? "Lo tengo" : "Me falta"}</span></div>)}</div>
+    </section>
+    <section className="rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-2"><div><h3 className="text-lg font-bold text-slate-800">📖 El álbum</h3><p className="text-xs text-slate-500">Pulsa un hueco vacío y coloca el cromo correcto</p></div><span className="text-xs font-bold text-violet-700">{totalPlaced}/15 colocados</span></div>
+      <div className="mt-4 grid grid-cols-3 gap-3">{[1,2,3].map(slotOffset => { const slot = (page-1)*3+slotOffset; const sticker = stickerAt(slot); return <button key={slot} type="button" onClick={() => !sticker && setActiveSlot(slot)} disabled={!!sticker} className={"relative aspect-[3/4] overflow-hidden rounded-xl border-2 p-2 text-center transition " + (sticker ? "border-emerald-300 bg-white" : "border-dashed border-violet-300 bg-white/70 hover:border-violet-500 hover:bg-violet-50")}>{sticker ? <><span className="absolute right-1 top-1 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">#{String(sticker).padStart(2,"0")}</span><div className="flex h-full flex-col items-center justify-center"><span className="text-3xl">🩵</span><span className="mt-2 text-[10px] font-bold text-slate-700">Foto pendiente</span><span className="mt-1 text-[9px] text-slate-500">Estadísticas pendientes</span></div></> : <div className="flex h-full flex-col items-center justify-center"><span className="text-3xl text-violet-300">＋</span><span className="mt-2 text-xs font-bold text-slate-600">Hueco {slot}</span><span className="mt-1 text-[9px] text-violet-500">Elegir cromo</span></div>}</button>; })}</div>
+      <div className="mt-4 flex items-center justify-center gap-2">{[1,2,3,4,5].map(n=><button key={n} type="button" onClick={()=>setPage(n)} className={"grid h-9 w-9 place-items-center rounded-full text-sm font-bold transition " + (page===n ? "bg-violet-600 text-white shadow" : "bg-white text-violet-700 hover:bg-violet-100")}>{n}</button>)}</div><p className="mt-2 text-center text-[10px] text-slate-500">PÁGINA {page} DE 5</p>
+    </section>
+    {activeSlot !== null && <div className="fixed inset-0 z-[300] flex items-end justify-center bg-slate-950/60 p-3 sm:items-center" role="dialog" aria-modal="true" aria-label="Elegir cromo"><div className="w-full max-w-lg animate-in slide-in-from-bottom-5 rounded-t-3xl bg-white p-5 text-slate-800 shadow-2xl sm:rounded-3xl"><div className="flex items-center justify-between"><div><h3 className="text-xl font-black">¿Qué cromo va aquí?</h3><p className="text-sm text-slate-500">Elige el número que corresponde al hueco {activeSlot}</p></div><button type="button" onClick={()=>setActiveSlot(null)} className="rounded-full bg-slate-100 px-3 py-2 text-sm">Cerrar ✕</button></div>{available.length ? <div className="mt-4 grid grid-cols-3 gap-3">{available.map(id=><button key={id} type="button" onClick={()=>chooseSticker(id)} className="rounded-2xl border-2 border-sky-200 bg-sky-50 p-3 text-center transition hover:-translate-y-1 hover:border-pink-300"><span className="block text-3xl">🌟</span><span className="mt-2 block text-sm font-black">Cromo #{String(id).padStart(2,"0")}</span><span className="mt-1 block text-[10px] text-slate-500">Disponible</span></button>)}</div> : <p className="mt-5 rounded-2xl bg-slate-50 p-4 text-center text-sm text-slate-600">Todavía no tienes cromos disponibles. ¡Abre algún sobre primero!</p>}</div></div>}
+    {totalPlaced===15 && <div className="animate-in zoom-in rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-center"><div className="text-4xl">🏆</div><p className="mt-2 font-black text-emerald-800">¡ÁLBUM COMPLETADO!</p><p className="mt-1 text-sm text-emerald-700">Colección de recuerdos desbloqueada. 🩵</p></div>}
+  </div>;
+}
 
 function CipherMission() {
   const storageKey = "lucia-archivo-020-v2";
