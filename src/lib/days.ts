@@ -27,11 +27,12 @@ export type Day =
   | { type: "cupido"; title: string }
   | { type: "datesim"; title: string }
   | { type: "bossbattle"; title: string }
+  | { type: "stickeralbum"; title: string }
   | { type: "memorymuseum"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
-  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️",
+  riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
 
 // Días 1–20: contenido provisional (se sustituye por el de la web original).
@@ -56,7 +57,7 @@ export const days: Day[] = [
   { type: "cupido", title: "Operación: Cupido infiltrado 🕵️‍♂️" },
   { type: "datesim", title: "El simulador de nuestra cita 🎮" },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
-  { type: "bossbattle", title: "Jefe final: el caos 💥" },
+  { type: "stickeralbum", title: "Nuestro álbum de cromos 🏆" },
   { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
   { type: "quiz", title: "Test exprés", questions: [
     { q: "¿Cuántos años vas a cumplir?", options: ["15", "16", "17"], answer: 1 },
