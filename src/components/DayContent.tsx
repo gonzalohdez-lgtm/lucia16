@@ -104,10 +104,18 @@ function StickerAlbum() {
   const totalPlaced = Object.keys(placed).length;
   const num = (id: number) => String(id).padStart(2, "0");
 
+  const stickerStats: Record<number, { felicidad: number; sueño: number; risas: number }> = {
+    1: { felicidad: 100, sueño: 20, risas: 50 },
+  };
   const Card = ({ id }: { id: number }) => <div className="fc-card">
     {stickerPhotos[id] ? <img src={stickerPhotos[id]} alt={"Cromo " + id} /> : <div className="grid h-full place-items-center text-3xl">🩵</div>}
     <span className="fc-card-num">{num(id)}</span>
     <span className="fc-card-band">L ♥ G · 2026</span>
+    {stickerStats[id] && <div className="fc-card-stats">
+      <span>Felicidad <b>{stickerStats[id].felicidad}%</b></span>
+      <span>Sueño <b>{stickerStats[id].sueño}%</b></span>
+      <span>Risas <b>{stickerStats[id].risas}%</b></span>
+    </div>}
   </div>;
 
   const PageContent = ({ p }: { p: number }) => <div className="fc-page">
