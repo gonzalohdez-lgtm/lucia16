@@ -44,7 +44,7 @@ export function CoupleQuestions() {
   }
 
   function next() {
-    if (!answers[step].trim()) return;
+    if (!(answers[step] ?? "").trim()) return;
     if (step === 4) {
       try { localStorage.setItem(key, JSON.stringify(answers)); } catch {}
       setFinished(true);
@@ -80,7 +80,7 @@ export function CoupleQuestions() {
       <textarea value={answers[step]} onChange={(e) => update(e.target.value)} placeholder="Escribe aquí lo que piensas…" rows={5} className="mt-4 w-full resize-y rounded-2xl border border-border bg-background p-4 text-base outline-none focus:ring-2 focus:ring-ring" />
       <div className="mt-4 flex items-center justify-between gap-3">
         <button className={button} disabled={step === 0} onClick={() => setStep(step - 1)}>← Anterior</button>
-        <button className={button} disabled={!answers[step].trim()} onClick={next}>{step === 4 ? "Ver nuestras respuestas 💗" : "Siguiente →"}</button>
+        <button className={button} disabled={!(answers[step] ?? "").trim()} onClick={next}>{step === 4 ? "Ver nuestras respuestas 💗" : "Siguiente →"}</button>
       </div>
     </div>
     <p className="text-center text-xs text-muted-foreground">Las respuestas se guardan en este dispositivo. Las de Gonzalo no aparecerán hasta que termines las cinco.</p>
