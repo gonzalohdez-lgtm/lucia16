@@ -71,6 +71,7 @@ function StickerAlbum() {
   const [page, setPage] = useState(1);
   const [flip, setFlip] = useState<{ from: number; dir: "next" | "prev"; k: number } | null>(null);
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
+  const [pickFeedback, setPickFeedback] = useState<"wrong" | "correct" | null>(null);
   const [packAnim, setPackAnim] = useState<{ pack: number; stage: "tear" | "cards" } | null>(null);
   const acquired = openedPacks.flatMap(pack => [pack * 3 - 2, pack * 3 - 1, pack * 3]);
   const placedIds = Object.values(placed);
@@ -83,8 +84,15 @@ function StickerAlbum() {
   };
   const chooseSticker = (id: number) => {
     if (activeSlot === null || placedIds.includes(id)) return;
+    if (id !== activeSlot) {
+      setPickFeedback("wrong");
+      return;
+    }
     const next = { ...placed, [String(activeSlot)]: id };
-    setPlaced(next); persist(openedPacks, next); setActiveSlot(null);
+    setPlaced(next);
+    persist(openedPacks, next);
+    setPickFeedback("correct");
+    window.setTimeout(() => { setActiveSlot(null); setPickFeedback(null); }, 550);
   };
   const goPage = (n: number) => {
     if (n < 1 || n > 5 || n === page || flip) return;
@@ -104,7 +112,7 @@ function StickerAlbum() {
 
   const PageContent = ({ p }: { p: number }) => <div className="fc-page">
     <div className="fc-page-head"><span>PÁG. {p}</span><span>⚽ LIGA L&G</span></div>
-    <div className="fc-slots">{[1, 2, 3].map(o => { const slot = (p - 1) * 3 + o; const s = placed[String(slot)]; return <button key={slot} type="button" disabled={!!s} onClick={() => !s && setActiveSlot(slot)} className={"fc-slot " + (s ? "is-filled" : "")}>{s ? <div className="fc-stick"><Card id={s} /></div> : <><span className="fc-slot-num">{num(slot)}</span><span className="fc-slot-hint">Pegar cromo</span></>}</button>; })}</div>
+    <div className="fc-slots">{[1, 2, 3].map(o => { const slot = (p - 1) * 3 + o; const s = placed[String(slot)]; return <button key={slot} type="button" disabled={!!s} onClick={() => { if (!s) { setPickFeedback(null); setActiveSlot(slot); } }} className={"fc-slot " + (s ? "is-filled" : "")}>{s ? <div className="fc-stick"><Card id={s} /></div> : <><span className="fc-slot-num">{num(slot)}</span><span className="fc-slot-hint">Pegar cromo</span></>}</button>; })}</div>
   </div>;
 
   return <div className="mt-4 space-y-4">
@@ -134,10 +142,11 @@ function StickerAlbum() {
             <p className="fc-cover-small">TEMPORADA 2026 · 15 CROMOS</p>
           </div>
         </div>
-        <div className="fc-nav">
-          <button type="button" onClick={() => goPage(page - 1)} disabled={page === 1}>◀</button>
-          <span>{page} / 5 · {totalPlaced}/15</span>
-          <button type="button" onClick={() => goPage(page + 1)} disabled={page === 5}>▶</button>
+        <div className="fc-nav flex-col gap-3">
+          <div className="flex items-center justify-center gap-3">
+            {[1, 2, 3, 4, 5].map(n => <button key={n} type="button" aria-label={"Ir a la página " + n} aria-current={page === n ? "page" : undefined} onClick={() => goPage(n)} className={page === n ? "ring-2 ring-white ring-offset-2 ring-offset-[var(--fc-pitch)]" : ""}>{n}</button>)}
+          </div>
+          <span className="text-xs">PÁGINA {page} DE 5 · {totalPlaced}/15 CROMOS</span>
         </div>
         {totalPlaced === 15 && <p className="fc-done">🏆 ¡ÁLBUM COMPLETADO! 🩵</p>}
       </div>}
@@ -161,8 +170,11 @@ function StickerAlbum() {
       {activeSlot !== null && <div className="fc-open-layer" onClick={() => setActiveSlot(null)}>
         <div className="fc-picker" onClick={e => e.stopPropagation()}>
           <p className="text-lg font-black">¿Qué cromo va en el hueco {num(activeSlot)}?</p>
-          {available.length ? <div className="mt-3 grid grid-cols-3 gap-3">{available.map(id => <button key={id} type="button" onClick={() => chooseSticker(id)}><Card id={id} /></button>)}</div> : <p className="mt-3 text-sm">No tienes cromos sin pegar. ¡Abre un sobre! 📦</p>}
-          <button type="button" className="fc-btn mt-4" onClick={() => setActiveSlot(null)}>Cerrar</button>
+          <p className="mt-1 text-xs text-slate-500">Selecciona el número que coincide con el hueco.</p>
+          {pickFeedback === "wrong" && <p className="mt-3 rounded-xl bg-rose-100 p-2 text-sm font-bold text-rose-700">Ese no es. Fíjate en la numeración y vuelve a probar.</p>}
+          {pickFeedback === "correct" && <p className="mt-3 rounded-xl bg-emerald-100 p-2 text-sm font-bold text-emerald-700">¡Correcto! Colocando el cromo…</p>}
+          {available.length ? <div className="mt-3 grid grid-cols-3 gap-3">{available.map(id => <button key={id} type="button" onClick={() => chooseSticker(id)} className={id === activeSlot ? "rounded-lg ring-2 ring-emerald-500" : "rounded-lg"}><Card id={id} /><span className="mt-1 block text-xs font-bold text-slate-700">Cromo {num(id)}</span></button>)}</div> : <p className="mt-3 text-sm">No tienes cromos sin pegar. ¡Abre un sobre! 📦</p>}
+          <button type="button" className="fc-btn mt-4" onClick={() => { setActiveSlot(null); setPickFeedback(null); }}>Cerrar</button>
         </div>
       </div>}
     </div>}
