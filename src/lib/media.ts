@@ -27,3 +27,9 @@ export const allPhotos = Object.values(photos);
 export const riverImage = river.url;
 export const puzzleDay2Image = puzzleDay2.url;
 export const riverSong = song.url;
+
+const cromoModules = import.meta.glob("@/assets/cromo-*.jpeg.asset.json", { eager: true, import: "default" }) as Record<string, { url: string }>;
+// Foto de cada cromo por número (1–15); los que falten siguen "pendientes".
+export const stickerPhotos: Record<number, string> = Object.fromEntries(
+  Object.entries(cromoModules).map(([path, a]) => [Number(path.match(/cromo-(\d+)/)?.[1]), a.url]),
+);
