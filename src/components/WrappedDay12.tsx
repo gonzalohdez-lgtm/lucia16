@@ -1,5 +1,5 @@
 import { useState } from "react";
-// @ts-nocheck\nimport { stickerPhotos } from "@/lib/media";
+// @ts-nocheck\nimport { photos, stickerPhotos } from "@/lib/media";
 
 const slides = [
   { kicker: "TU HISTORIA EN DATOS", title: "LUCÍA & GONZALO", big: "WRAPPED", sub: "13 MAR 2026 — 05 NOV 2026", color: "from-[#ff4d8d] via-[#9b3cff] to-[#26145c]" },
@@ -8,7 +8,7 @@ const slides = [
   { kicker: "TOP MOMENTOS", title: "Momentos que se quedan", moments: ["El día que te pedí salir","El día de las flores","Nuestro viaje juntos","La sorpresa de mi cumpleaños en tu casa","El día que fuimos juntos a ver al Sevilla FC"], color: "from-[#ffb000] via-[#ff5b45] to-[#b51e70]" },
   { kicker: "EL PRIMER RECUERDO", title: "El día que te pedí salir", image: stickerPhotos[12], sub: "Un día que lo cambió todo.", color: "from-[#ff4d8d] to-[#5b1ca8]" },
   { kicker: "UN DETALLE ESPECIAL", title: "El día de las flores", image: stickerPhotos[2], sub: "Hay detalles que se quedan para siempre.", color: "from-[#ff8c42] to-[#a51d88]" },
-  { kicker: "LUGARES CON HISTORIA", title: "Vuestros sitios", places: ["Casa del padre de Lucía","McDonald’s","Casa de los abuelos de Lucía","Casa de Gonzalo","Nervión Plaza"], color: "from-[#00c2a8] to-[#1455b8]" },
+  { kicker: "MÁS RECUERDOS", title: "Vuestra galería", gallery: [photos.p01, photos.p03, photos.p04, photos.p05], sub: "Pequeños momentos que también forman parte de vuestra historia.", color: "from-[#ff4d8d] via-[#9b3cff] to-[#26145c]" },\n  { kicker: "LUGARES CON HISTORIA", title: "Vuestros sitios", places: ["Casa del padre de Lucía","McDonald’s","Casa de los abuelos de Lucía","Casa de Gonzalo","Nervión Plaza"], color: "from-[#00c2a8] to-[#1455b8]" },
   { kicker: "LA BANDA SONORA", title: "Una canción especial", big: "LUGAR SEGURO", sub: "Jay Wheeler · Vuestra canción más especial", songs: ["Buenas Noches — Quevedo","Respuesta Cero — Quevedo","Piel de Cordero — Quevedo, La Pantera","TUCHAT — Quevedo"], color: "from-[#24c6dc] via-[#514a9d] to-[#24145e]" },
   { kicker: "FRASES ICÓNICAS", title: "Las de siempre", phrases: ["te amo","te echo de menos","quiero verte","buenos días","tengo sueño"], color: "from-[#f857a6] to-[#6b1b9a]" },
   { kicker: "ESTADÍSTICAS NO OFICIALES", title: "La ciencia lo confirma", funny: [["MÁS SUEÑO","EMPATE"],["MÁS HAMBRE","GONZALO"],["TARDA MÁS EN ARREGLARSE","LUCÍA"],["MÁS CABEZOTA","EMPATE"],["QUIÉN TIENE SIEMPRE RAZÓN","LUCÍA, CLARO"]], color: "from-[#f7971e] to-[#e73827]" },
@@ -37,7 +37,7 @@ export function WrappedDay12() {
         {slide.image && <img src={slide.image} alt="Recuerdo de vuestro álbum" className="mt-7 max-h-72 w-full rounded-3xl border-4 border-white/30 object-cover shadow-2xl" />}
         {slide.stats && <div className="mt-7 grid grid-cols-2 gap-3">{slide.stats.map(([n,l])=><div key={l} className="rounded-2xl bg-black/20 p-4 backdrop-blur-sm"><p className="text-4xl font-black">{n}</p><p className="mt-1 text-[10px] font-black tracking-widest">{l}</p></div>)}</div>}
         {slide.moments && <ol className="mt-7 space-y-3">{slide.moments.map((v,i)=><li key={v} className="flex items-start gap-3 rounded-2xl bg-black/20 p-3"><b className="text-2xl">{i+1}</b><span className="pt-1 text-sm font-bold">{v}</span></li>)}</ol>}
-        {slide.places && <div className="mt-7 space-y-3">{slide.places.map((v,i)=><p key={v} className="rounded-2xl bg-black/20 p-4 text-lg font-bold">{String(i+1).padStart(2,"0")}　{v}</p>)}</div>}
+        {slide.gallery && <div className="mt-7 grid grid-cols-2 gap-3">{slide.gallery.map((src,i)=><img key={i} src={src} alt="Foto de vuestro álbum" className="h-40 w-full rounded-2xl border-2 border-white/30 object-cover shadow-xl" />)}</div>}\n        {slide.places && <div className="mt-7 space-y-3">{slide.places.map((v,i)=><p key={v} className="rounded-2xl bg-black/20 p-4 text-lg font-bold">{String(i+1).padStart(2,"0")}　{v}</p>)}</div>}
         {slide.songs && <div className="mt-6 space-y-2">{slide.songs.map(v=><p key={v} className="rounded-xl bg-black/20 px-4 py-3 text-sm font-bold">{v}</p>)}</div>}
         {slide.phrases && <div className="mt-7 flex flex-wrap gap-2">{slide.phrases.map(v=><span key={v} className="rounded-full bg-white px-4 py-3 text-sm font-black text-[#6b1b9a]">“{v}”</span>)}</div>}
         {slide.funny && <div className="mt-7 space-y-3">{slide.funny.map(([a,b])=><div key={a} className="rounded-2xl bg-black/20 p-4"><p className="text-[10px] font-black tracking-widest opacity-75">{a}</p><p className="mt-1 text-xl font-black">{b}</p></div>)}</div>}
