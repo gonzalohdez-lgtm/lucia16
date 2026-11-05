@@ -5,7 +5,7 @@ import { photos } from "@/lib/media";
 const pages = [
   { type: "cover", kicker: "EDICIÓN ESPECIAL · DICIEMBRE 2026", title: "THE LOVE ISSUE", subtitle: "UNA HISTORIA, DOS PROTAGONISTAS", image: photos.p04 },
   { type: "contents", kicker: "EN ESTE NÚMERO", title: "El índice", items: ["La historia que lo empezó todo", "Un diario en fotografías", "La entrevista exclusiva", "The Love Awards", "La última página"] },
-  { type: "story", kicker: "THE COVER STORY", title: "Todo empezó un 13 de marzo", date: "13 MARZO 2026", text: "Hay fechas que se quedan guardadas para siempre. La vuestra empezó el 13 de marzo de 2026: el día en que empezasteis a salir. Una fecha que convirtió una historia en algo que seguir construyendo, recuerdo a recuerdo.", image: photos.p02, quote: "El comienzo de todos los capítulos que todavía quedan por escribir." },
+  { type: "story", kicker: "THE COVER STORY", title: "Todo empezó un 13 de marzo", date: "13 MARZO 2026", text: "Hay fechas que se quedan guardadas para siempre. La de ellos empezó el 13 de marzo de 2026: el día en que empezaron a salir. Una fecha que convirtió una historia en algo que seguir construyendo, recuerdo a recuerdo.", image: photos.p02, quote: "El comienzo de todos los capítulos que todavía quedan por escribir." },
   { type: "gallery", kicker: "PHOTO DIARY", title: "Instantes que lo dicen todo", images: [photos.p01, photos.p03, photos.p05, photos.p06, photos.p07, photos.p08, photos.p09, photos.p10] },
   { type: "interview", kicker: "THE EXCLUSIVE INTERVIEW", title: "Dos protagonistas, muchas versiones", questions: [
     ["¿Quién tarda más en arreglarse?", "Lucía. La redacción ha comprobado que no se le puede meter prisa."],
