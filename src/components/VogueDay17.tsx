@@ -8,11 +8,11 @@ const pages = [
   { type: "story", kicker: "THE COVER STORY", title: "Todo empezó un 13 de marzo", date: "13 MARZO 2026", text: "Hay fechas que se quedan guardadas para siempre. La vuestra empezó el 13 de marzo de 2026: el día en que empezasteis a salir. Una fecha que convirtió una historia en algo que seguir construyendo, recuerdo a recuerdo.", image: photos.p02, quote: "El comienzo de todos los capítulos que todavía quedan por escribir." },
   { type: "gallery", kicker: "PHOTO DIARY", title: "Instantes que lo dicen todo", images: [photos.p01, photos.p03, photos.p05, photos.p06, photos.p07, photos.p08, photos.p09, photos.p10] },
   { type: "interview", kicker: "THE EXCLUSIVE INTERVIEW", title: "Dos protagonistas, muchas versiones", questions: [
-    ["¿Quién tarda más en arreglarse?", "Lucía. La redacción ha comprobado que hay que reservar un margen extra."],
-    ["¿Quién tiene siempre razón?", "Lucía. Al menos, ese es el veredicto oficial de esta edición."],
-    ["¿Quién tiene más hambre?", "Gonzalo. La sección de gastronomía confirma que es un asunto serio."],
-    ["¿Quién es más cabezota?", "Empate. Ninguno piensa ceder esta respuesta."],
-    ["¿Quién tiene más sueño?", "Empate. La entrevista se realizó después de una larga jornada."],
+    ["¿Quién tarda más en arreglarse?", "Lucía. La redacción ha comprobado que no se le puede meter prisa."],
+    ["¿Quién tiene siempre razón?", "Lucía. Al menos, eso dice ella."],
+    ["¿Quién tiene más hambre?", "Gonzalo. La sección de gastronomía confirma que no hay debate."],
+    ["¿Quién es más cabezota?", "Empate. No se ha podido demostrar quien lo es más."],
+    ["¿Quién tiene más sueño?", "Empate. La entrevista se realizó después de una larga siesta."],
   ] },
   { type: "awards", kicker: "THE LOVE AWARDS", title: "Y los premios son para…", awards: [
     ["EL RELOJ DE LA PACIENCIA", "LUCÍA", "Por tomarse su tiempo antes de salir."],
