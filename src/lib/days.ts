@@ -1,6 +1,7 @@
 import { puzzleDay2Image } from "@/lib/media";
 
-export type Day =\n  | { type: "wrapped"; title: string }
+export type Day =
+  | { type: "wrapped"; title: string }
   | { type: "message"; title: string; text: string }
   | { type: "quiz"; title: string; questions: { q: string; options: string[]; answer: number }[]; reward: string }
   | { type: "scratch"; title: string; prize: string }
@@ -30,7 +31,8 @@ export type Day =\n  | { type: "wrapped"; title: string }
   | { type: "stickeralbum"; title: string }
   | { type: "memorymuseum"; title: string };
 
-export const dayIcons: Record<Day["type"], string> = {\n  wrapped: "📊",
+export const dayIcons: Record<Day["type"], string> = {
+  wrapped: "📊",
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
