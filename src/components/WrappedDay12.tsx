@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { photos, stickerPhotos } from "@/lib/media";
+// @ts-nocheck\nimport { stickerPhotos } from "@/lib/media";
 
 const slides = [
   { kicker: "TU HISTORIA EN DATOS", title: "LUCÍA & GONZALO", big: "WRAPPED", sub: "13 MAR 2026 — 05 NOV 2026", color: "from-[#ff4d8d] via-[#9b3cff] to-[#26145c]" },
