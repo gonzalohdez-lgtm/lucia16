@@ -16,7 +16,7 @@ const pages = [
   ] },
   { type: "awards", kicker: "THE LOVE AWARDS", title: "Y los premios son para…", awards: [
     ["EL RELOJ DE LA PACIENCIA", "LUCÍA", "Por tomarse su tiempo antes de salir."],
-    ["EL PREMIO GASTRONÓMICO", "GONZALO", "Por tener siempre sitio para algo más."],
+    ["EL PREMIO GASTRONÓMICO", "GONZALO", "Por poder comerse lo de ambos."],
     ["EL PREMIO A LA CONSTANCIA", "AMBOS", "Por compartir el título de más cabezotas."],
     ["EL PREMIO AL VEREDICTO FINAL", "LUCÍA", "Porque aquí ya sabemos quién tiene razón."],
   ] },
