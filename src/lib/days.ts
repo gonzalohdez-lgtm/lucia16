@@ -2,6 +2,7 @@ import { puzzleDay2Image } from "@/lib/media";
 
 export type Day =
   | { type: "wrapped"; title: string }
+  | { type: "vogue"; title: string }
   | { type: "message"; title: string; text: string }
   | { type: "quiz"; title: string; questions: { q: string; options: string[]; answer: number }[]; reward: string }
   | { type: "scratch"; title: string; prize: string }
@@ -33,6 +34,7 @@ export type Day =
 
 export const dayIcons: Record<Day["type"], string> = {
   wrapped: "📊",
+  vogue: "📰",
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
@@ -61,9 +63,7 @@ export const days: Day[] = [
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
   { type: "stickeralbum", title: "Nuestro álbum de cromos 🏆" },
   { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
-  { type: "quiz", title: "Test exprés", questions: [
-    { q: "¿Cuántos años vas a cumplir?", options: ["15", "16", "17"], answer: 1 },
-  ], reward: "¡16! Ya casi está 🎂" },
+  { type: "vogue", title: "VOGUE — THE LOVE ISSUE" },
   { type: "fortunecookie", title: "Galleta de la fortuna 🥠", message: "Eres lo mejor que me ha pasado" },
   { type: "safe", title: "Caja fuerte secreta 🔐", code: "1303", message: "Si hoy no tienes un buen dia, quiero que recuerdes que no tienes que poder con todo siempre. Puedes estar cansada, triste o de mal humor, que no pasa absolutamente nada. Si quieres hablar, te escucho; si necesitas distraerte, intentaré hacerte reír; y si necesitas un abrazo, te lo doy. No tengo una solución mágica para todo, pero sí muchas ganas de estar a tu lado." },
   { type: "cipher", title: "Archivo 020: La última transmisión 🔐" },
