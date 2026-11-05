@@ -1,6 +1,7 @@
 import { puzzleDay2Image } from "@/lib/media";
 
 export type Day =
+  | { type: "wrapped"; title: string }
   | { type: "message"; title: string; text: string }
   | { type: "quiz"; title: string; questions: { q: string; options: string[]; answer: number }[]; reward: string }
   | { type: "scratch"; title: string; prize: string }
@@ -31,6 +32,7 @@ export type Day =
   | { type: "memorymuseum"; title: string };
 
 export const dayIcons: Record<Day["type"], string> = {
+  wrapped: "📊",
   message: "💌", quiz: "❓", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
@@ -54,7 +56,7 @@ export const days: Day[] = [
   { type: "relationshipclock", title: "Calculadora del tiempo juntos ⏱️" },
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
   { type: "lovecompass", title: "La brújula está apuntando a mí 🧭🩵" },
-  { type: "cupido", title: "Operación: Cupido infiltrado 🕵️‍♂️" },
+  { type: "wrapped", title: "LUCÍA & GONZALO WRAPPED 📊" },
   { type: "datesim", title: "El simulador de nuestra cita 🎮" },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
   { type: "stickeralbum", title: "Nuestro álbum de cromos 🏆" },
