@@ -106,6 +106,20 @@ function StickerAlbum() {
 
   const stickerStats: Record<number, { felicidad: number; sueño: number; risas: number }> = {
     1: { felicidad: 100, sueño: 20, risas: 50 },
+    2: { felicidad: 85, sueño: 50, risas: 70 },
+    3: { felicidad: 80, sueño: 100, risas: 80 },
+    4: { felicidad: 95, sueño: 50, risas: 80 },
+    5: { felicidad: 75, sueño: 90, risas: 80 },
+    6: { felicidad: 70, sueño: 100, risas: 60 },
+    7: { felicidad: 100, sueño: 30, risas: 80 },
+    8: { felicidad: 80, sueño: 75, risas: 80 },
+    9: { felicidad: 90, sueño: 40, risas: 80 },
+    10: { felicidad: 80, sueño: 80, risas: 80 },
+    11: { felicidad: 95, sueño: 60, risas: 85 },
+    12: { felicidad: 100, sueño: 40, risas: 90 },
+    13: { felicidad: 90, sueño: 30, risas: 85 },
+    14: { felicidad: 95, sueño: 60, risas: 90 },
+    15: { felicidad: 85, sueño: 70, risas: 95 },
   };
   const Card = ({ id }: { id: number }) => <div className="fc-card">
     {stickerPhotos[id] ? <img src={stickerPhotos[id]} alt={"Cromo " + id} /> : <div className="grid h-full place-items-center text-3xl">🩵</div>}
