@@ -20,7 +20,7 @@ const slides = [
 
 export function WrappedDay12() {
   const [index, setIndex] = useState(0);
-  const slide = slides[index];
+  const slide = slides[index] ?? slides[0]!;
   const next = () => setIndex(v => Math.min(slides.length - 1, v + 1));
   const prev = () => setIndex(v => Math.max(0, v - 1));
   return <section className="w-full overflow-hidden rounded-[2rem] bg-[#09090f] text-white shadow-2xl">
