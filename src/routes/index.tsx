@@ -113,7 +113,7 @@ function Advent() {
 
       {selected !== null && days[selected]?.type !== "racing" && (
         <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-foreground/40 p-4" onClick={() => setSelected(null)}>
-          <div className="my-6 w-full max-w-md rounded-3xl bg-card p-6 shadow-xl md:p-8" onClick={(e) => e.stopPropagation()}>
+          <div className={`my-6 w-full ${selected === 16 ? "max-w-6xl p-2 sm:p-5" : "max-w-md p-6 md:p-8"} rounded-3xl bg-card shadow-xl`} onClick={(e) => e.stopPropagation()}>
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Día {selected + 1}</p>
             <div className="mt-3">
               {days[selected] && <DayContent key={selected} day={days[selected]} onLastSurprise={() => { setSelected(null); setRiver(true); }} />}
