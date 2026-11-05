@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Day } from "@/lib/days";
 import { JigsawPuzzle } from "@/components/JigsawPuzzle";
 import { WrappedDay12 } from "@/components/WrappedDay12";
+import { VogueDay17 } from "@/components/VogueDay17";
 import { PhotoDates } from "@/components/PhotoDates";
 import { CoupleQuestions } from "@/components/CoupleQuestions";
 import { FortuneCookie } from "@/components/FortuneCookie";
@@ -30,6 +31,7 @@ export function DayContent({ day, onLastSurprise }: { day: Day; onLastSurprise: 
 function render(day: Day, onLastSurprise: () => void) {
   switch (day.type) {
     case "wrapped": return <WrappedDay12 />;
+    case "vogue": return <VogueDay17 />;
     case "message": return <p className="whitespace-pre-line text-lg leading-relaxed">{day.text}</p>;
     case "quiz": return <Quiz day={day} />;
     case "scratch": return <Scratch prize={day.prize} />;
