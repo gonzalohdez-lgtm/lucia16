@@ -3,7 +3,7 @@ import { useState } from "react";
 import { photos, stickerPhotos } from "@/lib/media";
 
 const slides = [
-  { kicker: "TU HISTORIA EN DATOS", title: "LUCÍA & GONZALO", big: "WRAPPED", sub: "13 MAR 2026 — 05 NOV 2026", color: "from-[#ff4d8d] via-[#9b3cff] to-[#26145c]" },
+  { kicker: "TU HISTORIA EN DATOS", title: "LUCÍA & GONZALO", big: "WRAPPED", sub: "13 MAR 2026 — 12 DIC 2026", color: "from-[#ff4d8d] via-[#9b3cff] to-[#26145c]" },
   { kicker: "VUESTRO TIEMPO", title: "237 días", big: "JUNTOS", sub: "Y todavía quedan muchísimos recuerdos por crear.", color: "from-[#ff7b54] via-[#e83e8c] to-[#6e2cff]" },
   { kicker: "ESTADÍSTICAS DEL AÑO", title: "Esto es lo vuestro", stats: [["120","FOTOS JUNTOS"],["60","COMIDAS"],["1","VIAJE"],["20 + 1","PELÍCULAS + SERIE"],["480 h","DE LLAMADAS"]], color: "from-[#00b8a9] via-[#007bff] to-[#291b73]" },
   { kicker: "TOP MOMENTOS", title: "Momentos que se quedan", moments: ["El día que te pedí salir","El día de las flores","Nuestro viaje juntos","La sorpresa de mi cumpleaños en tu casa","El día que fuimos juntos a ver al Sevilla FC"], color: "from-[#ffb000] via-[#ff5b45] to-[#b51e70]" },
