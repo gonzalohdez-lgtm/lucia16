@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Embed the external racing game in a full-screen calendar dialog so its own game logic stays on the source site and players remain in this app.
+- Keep day 13 combat rules in a browser-safe pure module, shared by solo play and server-authoritative multiplayer, so health and round rules cannot diverge.
+- Store multiplayer rooms in Cloud with no direct browser grants; scoped hashed player capabilities, expiry and optimistic version checks protect reads, joins and attacks without requiring accounts.
