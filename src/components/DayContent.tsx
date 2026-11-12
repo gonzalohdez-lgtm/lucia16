@@ -10,7 +10,7 @@ import { FortuneCookie } from "@/components/FortuneCookie";
 import { SecretSafe } from "@/components/SecretSafe";
 import { RelationshipClock } from "@/components/RelationshipClock";
 import { LoveCompass } from "@/components/LoveCompass";
-import { ArcadeFight } from "@/components/ArcadeFight";
+import { SurpriseMachine } from "@/components/SurpriseMachine";
 import { photos, stickerPhotos } from "@/lib/media";
 
 const btn = "pill-button pill-dark";
@@ -41,7 +41,7 @@ function render(day: Day, onLastSurprise: () => void) {
     case "photodates": return <PhotoDates />;
     case "cupido": return <CupidMission />;
     case "datesim": return <DateSimulator />;
-    case "arcadefight": return <ArcadeFight />;
+    case "surprisemachine": return <SurpriseMachine />;
     case "bossbattle": return <ChaosBoss />;
     case "stickeralbum": return <StickerAlbum />;
     case "memorymuseum": return <MemoryMuseum />;
