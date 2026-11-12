@@ -29,6 +29,7 @@ export type Day =
   | { type: "cupido"; title: string }
   | { type: "datesim"; title: string }
   | { type: "arcadefight"; title: string }
+  | { type: "surprisemachine"; title: string }
   | { type: "bossbattle"; title: string }
   | { type: "stickeralbum"; title: string }
   | { type: "memorymuseum"; title: string };
