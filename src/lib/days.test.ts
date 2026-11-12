@@ -9,8 +9,8 @@ describe("día 4", () => {
 });
 
 describe("día 13", () => {
-  it("abre el combate independiente del resto de los días", () => {
-    expect(days[12]?.type).toBe("arcadefight");
+  it("abre la máquina de premios independiente del resto de los días", () => {
+    expect(days[12]?.type).toBe("surprisemachine");
     expect(days[11]?.type).toBe("wrapped");
     expect(days[13]?.type).toBe("photomemory");
   });

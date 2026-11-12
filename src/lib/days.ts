@@ -37,7 +37,7 @@ export type Day =
 export const dayIcons: Record<Day["type"], string> = {
   wrapped: "📊",
   vogue: "📰",
-  arcadefight: "🥊", surprisemachine: "🎁",
+   arcadefight: "🥊", surprisemachine: "🕹️",
   message: "💌", quiz: "✍🏽", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
