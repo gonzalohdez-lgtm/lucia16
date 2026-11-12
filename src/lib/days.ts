@@ -36,7 +36,7 @@ export type Day =
 export const dayIcons: Record<Day["type"], string> = {
   wrapped: "📊",
   vogue: "📰",
-  arcadefight: "🥊",
+  arcadefight: "🥊", surprisemachine: "🎁",
   message: "💌", quiz: "✍🏽", scratch: "🎟️", memory: "🧠", photomemory: "📸", photodates: "🗓️", surprisechoice: "❓", roulette: "🎡", couplequestions: "💭", gift: "🎁",
   riddle: "🔍", reasons: "🩵", coupon: "✂️", letter: "✉️", racing: "🏎️", puzzle: "🧩", journey: "💍", wordsearch: "🔠", fortunecookie: "🥠", safe: "🔐", relationshipclock: "⏱️", lovecompass: "🧭", cipher: "📡", cupido: "🕵️", datesim: "🎮", bossbattle: "👾", memorymuseum: "🖼️", stickeralbum: "🏆",
 };
@@ -61,7 +61,7 @@ export const days: Day[] = [
   { type: "journey", title: "El camino de Lucía y Gonzalo 🩵" },
   { type: "lovecompass", title: "La brújula está apuntando a mí 🧭🩵" },
   { type: "wrapped", title: "LUCÍA & GONZALO WRAPPED 📊" },
-  { type: "arcadefight", title: "Lucía vs. Gonzalo 🥊" },
+  { type: "surprisemachine", title: "La máquina de las sorpresas 🎁" },
   { type: "photomemory", title: "Encuentra las parejas de nuestras fotos 🩵", reward: "¡Has encontrado todos nuestros recuerdos! 🩵" },
   { type: "stickeralbum", title: "Nuestro álbum de cromos 🏆" },
   { type: "roulette", title: "La ruleta de nuestras sorpresas 🎡🩵" },
