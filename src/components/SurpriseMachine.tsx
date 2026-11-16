@@ -10,7 +10,7 @@ type Saved = { opened: string[]; broken: string[]; used: number[] };
 
 export function SurpriseMachine() {
   const [open, setOpen] = useState(false);
-  return <><h3 className="font-serif text-3xl">La máquina de las sorpresas</h3><p className="text-sm text-muted-foreground">Echa una moneda, acierta la pregunta y atrapa una bola. Si fallas… una bola se rompe para siempre.</p><Button className="cm-launch" onClick={() => setOpen(true)}><Gift /> Jugar</Button>{open && <Machine onClose={() => setOpen(false)} />}</>;
+  return <><h3 className="font-serif text-3xl">{"\n"}</h3><p className="text-sm text-muted-foreground">Echa una moneda, acierta la pregunta y atrapa una bola. Si fallas… una bola se rompe para siempre.</p><Button className="cm-launch" onClick={() => setOpen(true)}><Gift /> Jugar</Button>{open && <Machine onClose={() => setOpen(false)} />}</>;
 }
 
 function Machine({ onClose }: { onClose: () => void }) {
