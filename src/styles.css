@@ -225,3 +225,38 @@
 @keyframes cm-capsule-drop { from { transform:translate(-50%,-55px) rotate(90deg); } to { transform:translate(-50%,0); } }
 @keyframes cm-paper-arrive { from { opacity:0; transform:translateY(24px) rotate(-3deg); } }
 @media (max-width:650px) { .cm-layout { display:flex; flex-direction:column; gap:24px; padding:18px 20px 35px; }.cm-stage { width:100%; padding:0; }.cm-cabinet { width:min(100%,300px); }.cm-glass { height:250px; }.cm-phase-down .cm-cable { height:130px; }.cm-crown h1 { font-size:20px; }.cm-base { height:150px; }.cm-floral-panel { height:90px; width:92px; }.cm-base b { font-size:8px; }.cm-collection { width:min(100%,360px); }.cm-header { padding:8px 16px; }.cm-paper { padding:30px 22px; }.cm-collection h2 { margin-bottom:12px; } }
+.cm-carriage { transition:left .45s cubic-bezier(.3,1.4,.5,1); }
+.cm-sway .cm-claw { animation:cm-sway .5s ease-out; }
+@keyframes cm-sway { 25%{transform:rotate(8deg)} 60%{transform:rotate(-5deg)} 100%{transform:rotate(0)} }
+.cm-joystick { transition:transform .2s; transform-origin:bottom center; }
+.cm-coin-slots { position:relative; border:0; background:none; padding:4px; cursor:pointer; border-radius:6px; }
+.cm-coin-slots:disabled { cursor:default; }
+.cm-coin-ready { animation:cm-pulse 1.2s infinite; }
+@keyframes cm-pulse { 50%{ box-shadow:0 0 0 6px oklch(85% .15 85 / .6); } }
+.cm-coin { position:absolute; left:50%; top:-40px; width:22px; height:22px; border-radius:50%; background:radial-gradient(circle at 35% 30%,oklch(95% .1 90),oklch(75% .15 80) 60%,oklch(55% .12 70)); animation:cm-coin-in .9s ease-in forwards; }
+@keyframes cm-coin-in { 0%{transform:translateX(-50%) rotateY(0)} 60%{transform:translate(-50%,40px) rotateY(540deg)} 100%{transform:translate(-50%,50px) rotateY(720deg) scaleX(.1); opacity:0} }
+.cm-coin-cta { margin-top:16px; animation:cm-bounce 1.4s infinite; }
+@keyframes cm-bounce { 50%{ transform:translateY(-5px); } }
+.cm-lights-on { animation:cm-blink .4s steps(2) infinite; }
+@keyframes cm-blink { 50%{ opacity:.35; } }
+.cm-target { animation:cm-glow 1s infinite; }
+@keyframes cm-glow { 50%{ box-shadow:0 0 14px 4px oklch(90% .12 90 / .8); } }
+.cm-broken { filter:grayscale(1) brightness(.6); opacity:.6; }
+.cm-broken:before { content:""; position:absolute; inset:0; border-radius:50%; background:linear-gradient(115deg,transparent 45%,var(--cm-ink) 47%,transparent 50%),linear-gradient(60deg,transparent 52%,var(--cm-ink) 54%,transparent 57%); }
+.cm-cracking { animation:cm-crack 1.4s ease-in-out; }
+@keyframes cm-crack { 0%,60%{transform:translateX(-50%)} 10%,30%,50%{transform:translateX(-58%) rotate(-8deg)} 20%,40%{transform:translateX(-42%) rotate(8deg)} 80%{transform:translateX(-50%) scale(1.25); filter:brightness(2)} 100%{transform:translateX(-50%); filter:grayscale(1) brightness(.6)} }
+.cm-shake { animation:cm-shake-k .5s 2; }
+@keyframes cm-shake-k { 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+.cm-toast { position:absolute; left:50%; top:40%; transform:translateX(-50%); background:var(--cm-ink); color:var(--cm-blue-light); padding:8px 14px; border-radius:999px; font-size:12px; font-weight:700; white-space:nowrap; z-index:5; animation:cm-pop .3s ease-out; }
+@keyframes cm-pop { from{ transform:translateX(-50%) scale(.6); opacity:0; } }
+.cm-broken-count { font-size:13px; margin-bottom:8px; color:var(--cm-red); font-weight:700; }
+.cm-quiz { animation:cm-pop-in .35s cubic-bezier(.3,1.5,.5,1); }
+@keyframes cm-pop-in { from{ transform:scale(.7); opacity:0; } }
+.cm-options { display:grid; gap:10px; margin-top:16px; }
+.cm-options button { height:auto; white-space:normal; padding:12px; }
+.cm-opt-ok { background:var(--cm-leaf) !important; border-color:var(--cm-leaf) !important; }
+.cm-opt-bad { background:var(--cm-red) !important; color:var(--cm-metal-light) !important; animation:cm-shake-k .3s 2; }
+.cm-confetti { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+.cm-confetti i { position:absolute; top:-20px; width:9px; height:14px; background:var(--cm-pink); animation:cm-fall 1.8s ease-in forwards; }
+.cm-confetti i:nth-child(3n) { background:var(--cm-blue); } .cm-confetti i:nth-child(3n+1) { background:var(--cm-leaf); }
+@keyframes cm-fall { to{ transform:translateY(110vh) rotate(720deg); } }

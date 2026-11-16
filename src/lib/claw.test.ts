@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clawPrizes, nearestPrize } from "./claw";
+import { availablePrize, clawPrizes, clawQuestions, nearestPrize, nextQuestion } from "./claw";
 
 describe("máquina del día 13", () => {
   it("incluye fotos nuestras, vales y cartas", () => {
@@ -10,5 +10,12 @@ describe("máquina del día 13", () => {
     expect(nearestPrize(50, [])?.id).toBe("photo2");
     expect(nearestPrize(50, ["photo2"])?.id).not.toBe("photo2");
     expect(nearestPrize(50, clawPrizes.map(p => p.id))).toBeUndefined();
+  });
+  it("una bola rota por fallar no se puede volver a coger", () => {
+    expect(availablePrize(50, [], ["photo2"])?.id).not.toBe("photo2");
+  });
+  it("hay preguntas suficientes para todas las bolas y no se repiten", () => {
+    expect(clawQuestions.length).toBeGreaterThanOrEqual(clawPrizes.length);
+    expect(nextQuestion([0, 1])).toBe(2);
   });
 });

@@ -13,3 +13,23 @@ export const clawPrizes: ClawPrize[] = [
 export function nearestPrize(x: number, opened: string[]): ClawPrize | undefined {
   return clawPrizes.filter(p => !opened.includes(p.id)).sort((a, b) => Math.abs(a.x - x) - Math.abs(b.x - x))[0];
 }
+export type ClawQuestion = { q: string; options: string[]; answer: number };
+export const clawQuestions: ClawQuestion[] = [
+  { q: "¿Qué día nos conocimos?", options: ["30 enero", "6 febrero", "14 febrero", "13 marzo"], answer: 1 },
+  { q: "¿Qué día empezamos a salir?", options: ["7 febrero", "14 marzo", "13 marzo", "14 febrero"], answer: 2 },
+  { q: "¿Cuál es la comida favorita de Lucía?", options: ["Arroz con tomate", "Hamburguesa", "Aceitunas", "Pizza"], answer: 0 },
+  { q: "¿Qué es lo que más nos gusta hacer?", options: ["Ir al cine", "Comer", "Dormir", "Jugar"], answer: 2 },
+  { q: "¿Qué no soporta Lucía que haga Gonzalo?", options: ["Que no la escuche", "Silbar", "Hacerle cosquillas", "Besarla"], answer: 0 },
+  { q: "¿Qué día cumple Lucía 16 años?", options: ["12 diciembre", "21 diciembre", "24 diciembre", "21 noviembre"], answer: 1 },
+  { q: "¿A qué ciudad quiere viajar Gonzalo con Lucía?", options: ["Roma", "Londres", "París", "Nueva York"], answer: 2 },
+  { q: "¿Qué catering quiere Gonzalo en la boda?", options: ["Sushi", "McDonald's", "Paella", "Pizza"], answer: 1 },
+];
+/** Preguntas aún no usadas; si se agotan, vuelve a empezar. */
+export function nextQuestion(used: number[]): number {
+  const free = clawQuestions.map((_, i) => i).filter(i => !used.includes(i));
+  return free[0] ?? 0;
+}
+/** Bola disponible (ni abierta ni rota) más cercana al gancho. */
+export function availablePrize(x: number, opened: string[], broken: string[]) {
+  return nearestPrize(x, [...opened, ...broken]);
+}
