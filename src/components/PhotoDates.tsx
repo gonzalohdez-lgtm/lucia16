@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { photos } from "@/lib/media";
 
-const pairs = [
+export const pairs = [
   { id: "foto1", src: photos.p01, date: "27 de febrero" },
-  { id: "foto2", src: photos.p03, date: "14 de marzo" },
+  { id: "foto2", src: photos.p03, date: "13 de marzo" },
   { id: "foto3", src: photos.p05, date: "4 de abril" },
   { id: "foto4", src: photos.p07, date: "4 de junio" },
 ];
