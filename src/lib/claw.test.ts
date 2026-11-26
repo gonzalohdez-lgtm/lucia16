@@ -14,6 +14,11 @@ describe("máquina del día 13", () => {
   it("una bola rota por fallar no se puede volver a coger", () => {
     expect(availablePrize(50, [], ["photo2"])?.id).not.toBe("photo2");
   });
+  it("la pregunta de la comida favorita de Lucía ofrece las opciones nuevas", () => {
+    const food = clawQuestions.find(q => q.q === "¿Cuál es la comida favorita de Lucía?");
+    expect(food?.options).toEqual(["Hamburguesa", "Aceitunas", "Gonzalo", "McDonald's"]);
+    expect(food?.options[food.answer]).toBe("Gonzalo");
+  });
   it("hay preguntas suficientes para todas las bolas y no se repiten", () => {
     expect(clawQuestions.length).toBeGreaterThanOrEqual(clawPrizes.length);
     expect(nextQuestion([0, 1])).toBe(2);

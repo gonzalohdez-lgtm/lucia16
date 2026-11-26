@@ -17,7 +17,7 @@ export type ClawQuestion = { q: string; options: string[]; answer: number };
 export const clawQuestions: ClawQuestion[] = [
   { q: "¿Qué día nos conocimos?", options: ["30 enero", "6 febrero", "14 febrero", "13 marzo"], answer: 1 },
   { q: "¿Qué día empezamos a salir?", options: ["7 febrero", "14 marzo", "13 marzo", "14 febrero"], answer: 2 },
-  { q: "¿Cuál es la comida favorita de Lucía?", options: ["Arroz con tomate", "Hamburguesa", "Aceitunas", "Pizza"], answer: 0 },
+  { q: "¿Cuál es la comida favorita de Lucía?", options: ["Hamburguesa", "Aceitunas", "Gonzalo", "McDonald's"], answer: 2 },
   { q: "¿Qué es lo que más nos gusta hacer?", options: ["Ir al cine", "Comer", "Dormir", "Jugar"], answer: 2 },
   { q: "¿Qué no soporta Lucía que haga Gonzalo?", options: ["Que no la escuche", "Silbar", "Hacerle cosquillas", "Besarla"], answer: 0 },
   { q: "¿Qué día cumple Lucía 16 años?", options: ["12 diciembre", "21 diciembre", "24 diciembre", "21 noviembre"], answer: 1 },
