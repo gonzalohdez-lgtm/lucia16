@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, Gift, X, BookOpen, Images, Ticket, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { availablePrize, clawPrizes, clawQuestions, nextQuestion, type ClawPrize } from "@/lib/claw";
+import { availablePrize, ballNumber, clawPrizes, clawQuestions, nextQuestion, type ClawPrize } from "@/lib/claw";
 
 const STORAGE_KEY = "lucia-day13-machine-v3";
 const icons = { Carta: BookOpen, Foto: Images, Vale: Ticket };
@@ -103,9 +103,10 @@ function Machine({ onClose }: { onClose: () => void }) {
         <div className="cm-glass">
           <div className="cm-rail" />
           <div className={`cm-carriage ${tilt ? "cm-sway" : ""}`} style={{ left: `${x}%` }}><div className="cm-cable" /><div className="cm-claw"><i /><i /><i /></div>{(phase === "up" || phase === "deliver") && <span className="cm-ball cm-held" />}</div>
-          <div className="cm-balls">{clawPrizes.filter(p => !opened.includes(p.id) && !(current?.id === p.id && phase !== "down")).map((p, i) => {
+          <div className="cm-balls">{clawPrizes.filter(p => !opened.includes(p.id) && !(current?.id === p.id && phase !== "down")).map(p => {
             const dead = broken.includes(p.id);
-            return <span key={p.id} className={`cm-ball cm-ball-${i % 3} ${dead ? "cm-broken" : ""} ${cracking === p.id ? "cm-cracking" : ""} ${phase === "idle" && !dead && availablePrize(x, opened, broken)?.id === p.id ? "cm-target" : ""}`} style={{ left: `${p.x}%` }}><small>{dead ? "✕" : i + 1}</small></span>;
+            const number = ballNumber(p.id);
+            return <span key={p.id} className={`cm-ball cm-ball-${(number - 1) % 3} ${dead ? "cm-broken" : ""} ${cracking === p.id ? "cm-cracking" : ""} ${phase === "idle" && !dead && availablePrize(x, opened, broken)?.id === p.id ? "cm-target" : ""}`} style={{ left: `${p.x}%` }}><small>{dead ? "✕" : number}</small></span>;
           })}</div>
           {toast && <div className="cm-toast">{toast}</div>}
           <div className="cm-glass-shine" /><div className="cm-bottom-rail" />
@@ -119,6 +120,6 @@ function Machine({ onClose }: { onClose: () => void }) {
     </div><aside className="cm-collection"><p className="cm-eyebrow">TUS SORPRESAS</p><h2>{opened.length} <span>/ {clawPrizes.length}</span></h2>{broken.length > 0 && <p className="cm-broken-count">💥 {broken.length} bola{broken.length > 1 ? "s" : ""} rota{broken.length > 1 ? "s" : ""}</p>}<div className="cm-prize-list">{clawPrizes.map(p => { const Icon = icons[p.kind]; const collected = opened.includes(p.id); const dead = broken.includes(p.id); return <Button key={p.id} variant="ghost" className="cm-prize-item" disabled={!collected} onClick={() => setShown(p)}><Icon /><span><small>{p.kind}</small><b>{collected ? p.name : dead ? "Bola rota 💥" : "Por descubrir"}</b></span>{collected && p.photo && <img src={p.photo} alt="" />}</Button>; })}</div>
       {over && <Button variant="outline" onClick={() => persist({ opened, broken: [], used: [] })} disabled={broken.length === 0}>Reparar bolas rotas y reintentar</Button>}</aside></div>
     {phase === "question" && <div className="cm-reveal" role="dialog" aria-modal="true" aria-label="Pregunta"><article className="cm-paper cm-quiz"><p className="cm-eyebrow">PREGUNTA · SI FALLAS SE ROMPE UNA BOLA</p><h2>{q.q}</h2><div className="cm-options">{q.options.map((o, i) => <Button key={o} variant="outline" className={picked === undefined ? "" : i === q.answer ? "cm-opt-ok" : picked === i ? "cm-opt-bad" : ""} onClick={() => answer(i)}>{o}</Button>)}</div></article></div>}
-    {shown && <div className="cm-reveal" role="dialog" aria-modal="true" aria-label="Sorpresa abierta"><div className="cm-confetti" aria-hidden>{Array.from({ length: 18 }, (_, i) => <i key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 6) * 0.08}s` }} />)}</div><article className={`cm-paper cm-paper-${shown.kind.toLowerCase()}`}><Button variant="ghost" size="icon" className="cm-paper-close" aria-label="Cerrar premio" onClick={() => setShown(undefined)}><X /></Button><p className="cm-eyebrow">{shown.kind} · L & G</p><h2>{shown.name}</h2>{shown.photo ? <img src={shown.photo} alt={shown.name} /> : <p className="cm-letter-text">{shown.detail}</p>}<Button className="cm-launch" onClick={() => setShown(undefined)}>Volver a la máquina</Button></article></div>}
+    {shown && <div className="cm-reveal" role="dialog" aria-modal="true" aria-label="Sorpresa abierta"><div className="cm-confetti" aria-hidden>{Array.from({ length: 18 }, (_, i) => <i key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 6) * 0.08}s` }} />)}</div><article className={`cm-paper cm-paper-${shown.kind.toLowerCase()}`}><Button variant="ghost" size="icon" className="cm-paper-close" aria-label="Cerrar premio" onClick={() => setShown(undefined)}><X /></Button><p className="cm-eyebrow">{shown.kind} · L & G</p><h2>{shown.name}</h2>{shown.photo && <img src={shown.photo} alt={shown.name} />}{shown.detail && <p className="cm-letter-text">{shown.detail}</p>}<Button className="cm-launch" onClick={() => setShown(undefined)}>Volver a la máquina</Button></article></div>}
   </section>;
 }

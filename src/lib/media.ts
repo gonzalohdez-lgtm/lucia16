@@ -17,6 +17,7 @@ import p18 from "@/assets/18.jpeg.asset.json";
 import river from "@/assets/guadalquivir.jpg.asset.json";
 import puzzleDay2 from "@/assets/puzle-dia2.jpeg.asset.json";
 import song from "@/assets/lugar-seguro.mp3.asset.json";
+import favorite from "@/assets/mi-foto-favorita.jpeg.asset.json";
 
 export const photos = {
   p01: p01.url, p02: p02.url, p03: p03.url, p04: p04.url, p05: p05.url, p06: p06.url,
@@ -27,6 +28,7 @@ export const allPhotos = Object.values(photos);
 export const riverImage = river.url;
 export const puzzleDay2Image = puzzleDay2.url;
 export const riverSong = song.url;
+export const favoritePhoto = favorite.url;
 
 const cromoModules = import.meta.glob("@/assets/cromo-*.jpeg.asset.json", { eager: true, import: "default" }) as Record<string, { url: string }>;
 // Foto de cada cromo por número (1–15); los que falten siguen "pendientes".
