@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availablePrize, ballNumber, clawPrizes, clawQuestions, nearestPrize, nextQuestion } from "./claw";
+import { availablePrize, ballNumber, clawPrizes, clawQuestions, nearestPrize, questionForBall } from "./claw";
 
 describe("máquina del día 13", () => {
   it("incluye fotos nuestras, vales y cartas", () => {
@@ -13,6 +13,19 @@ describe("máquina del día 13", () => {
   });
   it("una bola rota por fallar no se puede volver a coger", () => {
     expect(availablePrize(50, [], ["photo2"])?.id).not.toBe("photo2");
+  });
+  it("cada bola tiene su propia pregunta y ninguna se repite", () => {
+    const bound = clawPrizes.map(p => p.question);
+    expect(new Set(bound).size).toBe(clawPrizes.length);
+    expect(bound.every(i => i >= 0 && i < clawQuestions.length)).toBe(true);
+    expect(questionForBall("photo2")?.q).toBe("¿Cuántos días exactos han pasado desde el día en que supimos de la existencia del otro?");
+  });
+  it("la bola de la pregunta de la ciudad da el vale del regalo", () => {
+    const city = clawQuestions.findIndex(q => q.q === "¿A qué ciudad quiere viajar Gonzalo con Lucía?");
+    const ball = clawPrizes.find(p => p.question === city);
+    expect(ball?.kind).toBe("Vale");
+    expect(ball?.name).toBe("Vale por un regalo que te tengo que dar");
+    expect(ballNumber(ball!.id)).toBe(5);
   });
   it("la pregunta de la comida favorita de Lucía ofrece las opciones nuevas", () => {
     const food = clawQuestions.find(q => q.q === "¿Cuál es la comida favorita de Lucía?");
@@ -37,9 +50,5 @@ describe("máquina del día 13", () => {
   it("la ciudad correcta es Roma", () => {
     const city = clawQuestions.find(q => q.q === "¿A qué ciudad quiere viajar Gonzalo con Lucía?");
     expect(city?.options[city.answer]).toBe("Roma");
-  });
-  it("hay preguntas suficientes para todas las bolas y no se repiten", () => {
-    expect(clawQuestions.length).toBeGreaterThanOrEqual(clawPrizes.length);
-    expect(nextQuestion([0, 1])).toBe(2);
   });
 });

@@ -216,6 +216,7 @@
 .cm-hatch { position:absolute; left:22px; top:40px; width:73px; height:73px; border:6px solid var(--cm-blue-dark); border-radius:50%; background:var(--cm-ink); padding:0; }.cm-hatch:hover { background:var(--cm-ink); }.cm-hatch:disabled { opacity:1; }.cm-hatch .cm-ball { position:relative; left:21px; animation:cm-capsule-drop .65s ease-out; }
 .cm-base b { position:absolute; bottom:7px; left:0; right:0; text-align:center; font-size:9px; }
 .cm-hatch-ready { cursor:pointer; outline:3px solid var(--cm-metal-light); outline-offset:3px; }
+.cm-hatch-crack { outline:3px solid var(--cm-red); outline-offset:3px; animation:cm-shake-k .18s 5; }
 .cm-feet { height:14px; display:flex; justify-content:space-between; padding:0 25px; }.cm-feet i { width:15px; background:var(--cm-ink); border-radius:0 0 4px 4px; }
 .cm-eyebrow { font-size:11px; font-weight:800; margin:0; color:var(--cm-blue-dark); }
 .cm-collection h2 { font-size:52px; margin:10px 0 24px; font-weight:600; }.cm-collection h2 span { font-size:22px; color:var(--cm-blue-dark); }
